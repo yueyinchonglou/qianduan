@@ -78,7 +78,245 @@ display: block;　　　　转换为块元素
 
 ## 2、html5新特性
 
+### 1、语义化标签
+
+<header><header/> 定义文档的头部
+
+ <nav><nav/> 定义导航链接
+
+ <section><section/> 定义文档中的节，段落，
+
+ <article><article/> 定义页面独立内容区域
+
+ <aside><aside/> 定义页面的侧边栏内容
+
+ <detailes><detailes/> 定义文档某部分细节
+
+<summary><summary/> 标签包含了details元素的标题
+
+<dialog><dialog/> 定义对话框，提示框
+
 ![66494361419](C:\Users\86131\AppData\Local\Temp\1664943614194.png)
+
+### 2、新增Input[表单](https://so.csdn.net/so/search?q=%E8%A1%A8%E5%8D%95&spm=1001.2101.3001.7020)的类型、和属性
+
+- ## 类型
+
+~~~html
+<!-- 输入格式也限制为不同模式 -->
+            <!-- 输入必须为邮箱类型 -->
+            <li>email邮箱：<input type="email"></li>
+            <!-- 输入必须为网址类型 -->
+            <li>url网络地址：<input type="url"></li>
+            <!-- 输入必须为日期类型 -->
+            <li>date日期：<input type="date"></li>
+            <!-- 输入必须为时间类型 -->
+            <li>time时间：<input type="time"></li>
+            <!-- 输入必须为数值类型 -->
+            <li>number数量：<input type="number" min="5" max="20"></li>
+            <!-- 输入必须为数值类型 -->
+            <li>tel电话号码：<input type="tel"></li>
+            <li>color颜色：<input type="color"></li>
+            <li>周/年：<input type="week"></li>
+            <li>月/年：<input type="month"></li>
+            <li>范围：<input type="range"></li>
+~~~
+
+- ## 属性
+
+~~~html
+<!-- 新增表单属性 
+                required 表单必填属性，
+                placeholder 提示文本 
+                autofocus页面加载完成自动聚焦输入框 
+                autocomplete 当用户输入信息时显示历史输入信息on/off
+                pattern 属性，描述了一个正则表达式用于验证<input> 元素的值
+                multiple 规定<input> 元素中可选择多个值。
+                min 和 max 属性，设置元素最小值与最大值。
+                step 属性，为输入域规定合法的数字间隔。
+                height 和 width 属性，用于 image 类型的 <input> 标签的图像高度和宽度。
+            -->
+            <li>search搜索框：<input type="search" required="required" placeholder="请输入文字" autofocus='autofocus' autocomplete="on"></li>
+            <li><input type="submit" value="提交"></li>
+            <!-- multiple 提交多文件 -->
+            <li><input type="file" value="提交" multiple="multiple"></li>
+~~~
+
+### 3、audio、video[音频](https://so.csdn.net/so/search?q=%E9%9F%B3%E9%A2%91&spm=1001.2101.3001.7020)和视频
+
+~~~html
+<!-- 
+        src 文件路径/url
+        autoplay 是否自动播放，
+        controls 播放控件， 
+        mute 静音播放，
+        宽度、高度，
+        loop 是否循环播放，
+        poster 预加载图片...... -->
+    <h1>多媒体音频标签audio</h1><br>
+    <audio src="关羽.mp3" autoplay = "autoplay" controls = "controls" muted = "muted" width = "700px" height="350px" poster="3.jpg"></audio>
+    <audio autoplay>
+        <source src="关羽.mp3" type="audio/mpeg">
+        <source src="关羽.ogg" type="audio/ogg">
+        <source src="关羽.wav" type="audio/wav">
+    </audio>
+~~~
+
+### 4、[Canvas](https://so.csdn.net/so/search?q=Canvas&spm=1001.2101.3001.7020)绘图
+
+1、Canvas的定义
+
+<canvas> 标签只是图形容器，您必须使用脚本来绘制图形。你可以通过多种方法使用 canvas 绘制路径,盒、圆、字符以及添加图像。一个画布在网页中是一个矩形框，通过 <canvas> 元素来绘制。
+
+**注意:** 默认情况下 <canvas> 元素没有边框和内容。
+
+<canvas>简单实例如下:
+
+~~~html
+<canvas id="myCanvas" width="200" height="100"></canvas>
+~~~
+
+- id 是canvas元素的标识；
+- height是canvas画布的高度，单位为像素；
+- width是canvas画布的宽度，单位为像素。
+
+2、使用JavaScript获取网页中的Canvas对象
+
+获取对象的方法：**document.getElementById(对象id)**
+
+获取canvas对象的2D绘图上下文：**getContext（“2d”)**
+
+（1）绘制直线
+
+- 调用beginPath()方法，指示开始绘图路径： **ctx.beginPath()**;
+- 调用moveTo()方法将坐标移至直线起点： **ctx.moveTo(x,y)**;
+- 调用lineTo()方法绘制直线： **ctx.lineTo(x,y)**;
+- 调用stroke()方法，绘制图形的边界轮廓： **ctx.stroke()**;
+- 调用closePath()方法，指示闭合绘图路径: **ctx.closePath()**;
+
+（2）绘制矩形
+
+绘制矩形：rect(x,y,width,height)； 
+
+绘制矩形边框：strokeRect(x, y, width, height);
+
+绘制填充矩形：fillRect(x, y, width, height);
+
+擦除指定矩形区域：clearRect(x, y, width, height);
+
+- x:矩形左上角的X坐标；
+- y:矩形左上角的y坐标；
+- width:矩形的宽度；
+- height:矩形的高度
+
+（3）绘制圆弧
+
+arc(centerx,centery,radius,startAngle,endAngle,antiClockwise);
+
+- centerx,centery    圆弧中心点坐标
+- Radius 半径
+- startAngle  起始弧度
+- endAngle  终止弧度
+- antiClockwise  是否按逆时针方向绘图，    是一个可选参数，默认为false（即顺时针方向绘图）
+- 弧度 = 角度* ( Math.PI / 180 )
+
+（4）填充和描边
+
+1.描边
+
+strokeStyle指定描边颜色（三种颜色方式均可）
+
+lineWidth指定描边宽度（像素为单位）
+
+2.填充
+
+fillStyle指定填充颜色（三种颜色方式均可）
+
+### 5、[SVG](https://so.csdn.net/so/search?q=SVG&spm=1001.2101.3001.7020)绘图
+
+- SVG 指可伸缩矢量图形 (Scalable Vector Graphics)
+- SVG 用于定义用于网络的基于矢量的图形
+- SVG 使用 XML 格式定义图形
+- SVG 图像在放大或改变尺寸的情况下其图形质量不会有损失
+- SVG 是万维网联盟的标准   
+
+
+- SVG 图像可通过文本编辑器来创建和修改
+- SVG 图像可被搜索、索引、脚本化或压缩
+- SVG 是可伸缩的
+- SVG 图像可在任何的分辨率下被高质量地打印
+- SVG 可在图像质量不下降的情况下被放大
+
+### 6、地理定位
+
+### 7、拖拽[API]
+
+拖放是一种常见的特性，即抓取对象以后拖到另一个位置。
+
+在 HTML5 中，拖放是标准的一部分，任何元素都能够拖放。
+
+首先，为了使元素可拖动，把 draggable 属性设置为 true ：
+
+<img draggable="true">
+
+在上面的例子中，ondragstart 属性调用了一个函数，drag(event)，它规定了被拖动的数据。
+
+dataTransfer.setData() 方法设置被拖数据的数据类型和值：
+
+~~~javascript
+function drag(event)
+{
+    event.dataTransfer.setData("Text",event.target.id);
+}
+~~~
+
+ondragover 事件规定在何处放置被拖动的数据。
+
+默认地，无法将数据/元素放置到其他元素中。如果需要设置允许放置，我们必须阻止对元素的默认处理方式。
+
+这要通过调用 ondragover 事件的 event.preventDefault() 方法：
+
+event.preventDefault()
+
+当放置被拖数据时，会发生 drop 事件。
+
+在上面的例子中，ondrop 属性调用了一个函数，drop(event)：
+
+```javascript
+function drop(event)
+{
+    event.preventDefault();
+    var data=event.dataTransfer.getData("Text");
+    event.target.appendChild(document.getElementById(data));
+}
+```
+
+- 调用 preventDefault() 来避免浏览器对数据的默认处理（drop 事件的默认行为是以链接形式打开）
+- 通过 dataTransfer.getData("Text") 方法获得被拖的数据。该方法将返回在 setData() 方法中设置为相同类型的任何数据。
+- 被拖数据是被拖元素的 id ("drag1")
+- 把被拖元素追加到放置元素（目标元素）中
+
+### 8、WebStorage（web存储）
+
+使用HTML5可以在本地存储用户的浏览数据。早些时候本地存储使用的是cookies。cookie只有4kb大小，它是一种纯文本文件每次发起http请求都会携带cookie，而且cookies有安全问题，如果cookie被拦截了，那就可获得session的所有信息，只有转发cookie就能达到目的。
+
+LocalStorage和SessionStorage都是HTML5提出的存储方案。大小一般为5MB，可以存储更多信息。均受到同源策略的限制。
+
+SessionStorage 主要用于临时保存同一窗口的数据，刷新不会删除，，但是页面关闭或者窗口关闭，SessionStorage就会被清除。
+
+LocalStorage 主要用于长期保存数据，可以在同一浏览器不同窗口使用，永久存储，除非手动删除，不然不会清除。
+
+HTML5还提供了相应的操作webStorage 的 API：
+
+setItem(key,value)        保存数据
+
+getItem(key)                读取数据
+
+removeItem(key)        删除单个数据
+
+clear()                        清除所有数据
+
+key(index)                获取某个索引的key
 
 # 二、盒模型
 
@@ -490,3 +728,671 @@ Flex 是 Flexible Box 的缩写，意为"弹性布局"，用来为盒状模型�
 
 1. 获得 rem 的基准值。这边默认设置容器宽度为1920 * 1080，然后用1920 / 192 来计算rem的值
 2. 页面内写一段js代码，动态的计算`html根元素的font-size`
+
+# 九、src和href的区别
+
+src和href的作用都是用于请求资源。
+区别：
+**1.请求资源类型不同**
+href，超文本引用，用于建立文档与资源的联系，常用的有：link、a。
+src，将其所指向的资源下载并应用到当前页面，常见的有script、img。
+**2.作用结果不同**
+href，用于文档与资源之间确立联系。
+src，请求到的资源替换当前内容。
+**3.浏览器的解析不同**
+
+1. 当浏览器遇到href会并行下载资源并且不会停止对当前文档的处理。(同时也是为什么建议使用 link 方式加载 CSS，而不是使用 @import 方式)
+2. 当浏览器解析到src ，会暂停其他资源的下载和处理，直到将该资源加载或执行完毕。(这也是script标签为什么放在底部而不是头部的原因)
+
+# 十、重绘和回流
+
+## 1、浏览器是如何进行界面渲染的
+
+![66504465481](C:\Users\86131\AppData\Local\Temp\1665044654819.png)
+
+- 解析（Parser）HTML，生成DOM树(DOM Tree)
+- 同时解析（Parser） CSS，生成样式规则 (Style Rules)
+- 根据DOM树和样式规则，生成渲染树(Render Tree)
+- 进行布局 Layout(回流/重排):根据生成的渲染树，得到节点的几何信息（位置，大小）
+- 进行绘制 Painting(重绘): 根据计算和获取的信息进行整个页面的绘制
+- Display: 展示在页面上
+
+## 2、重绘和回流(重排)
+
+1、回流(重排)
+当 Render Tree 中部分或者全部元素的尺寸、结构、布局等发生改变时，浏览器就会重新渲染部分或全部文档的过
+程称为 回流。
+2、重绘
+由于节点(元素)的样式的改变并不影响它在文档流中的位置和文档布局时(比如：color、background-color、
+outline等), 称为重绘。
+3、重绘不一定引起回流，而回流一定会引起重绘。
+
+## 3、会导致回流（重排）的操作
+
+- 页面的首次刷新
+- 浏览器的窗口大小发生改变
+- 元素的大小或位置发生改变
+- 改变字体的大小
+- 内容的变化（如：input框的输入，图片的大小）
+- 激活css伪类 （如：:hover）
+- 脚本操作DOM（添加或者删除可见的DOM元素）
+- 简单理解影响到布局了，就会有回流
+
+## 4、减少页面重绘和回流的方法
+
+1.尽量使用css属性简写:如：用boder代替boder-width，boder-style，boder-color
+
+2.批量修改元素样式 elem.className
+
+3.尽量避免用table布局(table元素一旦触发回流就会导致table里所有的其它元素回流)
+
+4.需要创建多个DOM节点时,使用DocumentFragment创建。
+
+因为:每次创建一个页面就会发生回流，所以采用DocumentFragment批量创建
+
+5.尽量去写css表达式。因为每次调用都会重新计算值(包括加载页面)
+
+# 十一、script标签上使用 defer和 async的区别
+
+defer和 [async](https://so.csdn.net/so/search?q=async&spm=1001.2101.3001.7020)的使用,可以用于提升网页性能。
+script标签存在两个属性，defer和async，因此 script标签的使用分为三种情况：
+
+1. `<script src="example.js"></script>`
+   没有defer或async属性，浏览器会立即加载并执行相应的脚本。
+   不等待后续加载的文档元素，读到就开始加载和执行，此举会阻塞后续文档的加载
+
+2. `<script async src="example.js"></script>`
+   有了async属性，表示后续文档的加载和渲染与js脚本的加载和执行是并行进行的，即异步执行；
+
+3. `<script defer src="example.js"></script>`
+   有了defer属性，加载后续文档的过程和js脚本的加载是并行进行的(异步)，此时的js脚本仅加载不
+   执行, js脚本的执行需要等到文档所有元素解析完成之后，DOMContentLoaded事件触发执行之
+   前。
+   下图是使用了 defer、async、和未使用时的运行情况对比：![img](https://img-blog.csdnimg.cn/c78314887538458496efc135123874fb.png#pic_center)
+
+   **绿线：HTML的解析时间**
+
+   **蓝线：JS脚本的加载时间**
+
+   **红色：JS脚本的执行时间**
+
+   从图中我们可以明确一下几点：
+   1.defer和async在网络加载过程是一致的，都是异步执行的；(放在页面顶部,也不会阻塞页面的加
+   载,与页面加载同时进行)
+   2.两者的区别,脚本加载完成之后, async是立刻执行, defer会等一等 (等前面的defer脚本执行,等dom的加载)
+   所以, js脚本加上 async或 defer,放在头部可以减少网页的下载加载时间,如果不考虑兼容性,可以用于优化页面加载的性能
+
+# 十二、如何实现图片的懒加载
+
+我们经常遇到这样的需求——检测一个元素是否可见或者两个元素是否相交，如
+
+- 图片懒加载——当图片滚动到可见时才进行加载
+- 内容无限滚动——也就是用户滚动到接近内容底部时直接加载更多，而无需用户操作翻页，给用户一种网页可以无限滚动的错觉
+- 检测广告的曝光情况——为了计算广告收益，需要知道广告元素的曝光情况
+- 在用户看见某个区域时执行任务或播放动画
+
+### Element.getBoundingClientRect()
+
+返回一个 DOMRect 对象，其提供了元素的大小及其相对于视口的位置。
+
+缺点：事件[监听](https://so.csdn.net/so/search?q=%E7%9B%91%E5%90%AC&spm=1001.2101.3001.7020)和调用都是在主线程上运行，因此频繁触发、调用，造成浏览器频繁的重绘和回流，给网站带来相当大的卡顿
+
+### Intersection Observer API
+
+window对象上有一个Intersection Observer API，
+它会注册一个[回调](https://so.csdn.net/so/search?q=%E5%9B%9E%E8%B0%83&spm=1001.2101.3001.7020)函数，每当被监视的元素进入或者退出另外一个元素时 (或者 viewport )，或者两个元素的相交部分大小发生变化时，该回调方法会被触发执行。这样，我们网站的主线程不需要再为了监听元素相交而辛苦劳作，浏览器会自行优化元素相交管理。
+
+1、创建一个 intersection observer
+
+- 创建一个 IntersectionObserver 对象，并传入相应参数和回调用函数，该回调函数将会在目标 (target) 元素和根 (root) 元素的交集大小超过阈值 (threshold) 规定的大小时候被执行。
+
+~~~javascript
+let options = {
+  root: document.querySelector('#scrollArea'),
+  rootMargin: '0px',
+  threshold: 1.0
+}
+//回调函数只会在元素达到thresholds 规定的阈值时才会执行。
+let observer = new IntersectionObserver(callback, options);
+
+~~~
+
+2. 给定一个目标元素进行观察
+
+```javascript
+let target = document.querySelector('#listItem');
+observer.observe(target);
+//unobserve()	停止监听特定目标元素
+123
+```
+
+请留意，你注册的回调函数将会在主线程中被执行。所以该函数执行速度要尽可能的快。如果有一些耗时的操作需要执行，建议使用 Window.requestIdleCallback() 方法
+
+3. 停止监听特定目标元素
+
+```javascript
+observer.unobserve(target);//例如图片懒加载时，加载完后即停止监听该元素
+1
+```
+
+4. IntersectionObserver对象停止全部监听工作
+
+```javascript
+observer.disconnect();
+```
+
+# 十三、link和@import的区别
+
+1、从属关系区别
+
+@import是 CSS 提供的语法规则，只有导入[样式表](https://so.csdn.net/so/search?q=%E6%A0%B7%E5%BC%8F%E8%A1%A8&spm=1001.2101.3001.7020)的作用；link是HTML提供的标签，不仅可以加载 CSS 文件，还可以定义 RSS、rel 连接属性等。
+
+2、加载顺序区别
+
+加载页面时，link标签引入的 CSS 被同时加载；@import引入的 CSS 将在页面加载完毕后被加载。
+
+3、兼容性区别
+
+@import是 CSS2.1 才有的语法，故只可在 IE5+ 才能识别；link标签作为 HTML 元素，不存在兼容性问题。
+
+4、DOM可控性区别
+
+可以通过 JS 操作 DOM ，插入link标签来改变样式；由于 DOM 方法是基于文档的，无法使用@import的方式插入样式。
+
+# 十四、对css sprites的理解
+
+## 1、为什么要使用Sprites(精灵图)？
+
+网页通常包含多个图像。这些包括图标，按钮，徽标，相关图片和其他图形。当页面中加载图像时，浏览器向服务器发出HTTP请求。分别加载每个图像需要多次调用HTTP服务器，这可能导致下载时间变慢以及带宽使用率过高。
+
+CSS Sprites会将多个图像组合成一个称为精灵表或拼贴图的单个图像，用户不下载多个文件，而是下载单个文件并通过偏移文件显示必要的图像(或精灵图)。
+
+这样可以减少对服务器的调用、减少呈现网页所需的下载次数，节省带宽并缩短用户端的下载时间，减少网络拥塞。
+
+## 2、如何使用CSS Sprites(精灵图)？
+
+因为CSS Sprites是一张多个图像组合成单个图像，在精灵表中多个图像会被放置在网格状图案里，呈现网状分布。
+
+当需要特定图像(精灵图)时，一般会通过CSS background-images属性引用精灵表，在通过CSS background-position属性对其进行偏移定位得到所需的精灵图，然后以[像素](https://so.csdn.net/so/search?q=%E5%83%8F%E7%B4%A0&spm=1001.2101.3001.7020)为单位定义精灵图的大小。
+
+# 十五、实现两栏布局的方式
+
+一般两栏布局指的是**左边一栏宽度固定，右边一栏宽度自适应**。两栏布局的具体实现有以下几种方式：
+
+## ① 利用浮动
+
+- 利用**浮动**，将左边元素宽度设置为200px，并且设置向左浮动。
+- 将右边元素的`margin-left`设置为200px，宽度设置为auto（默认为auto，撑满整个父元素）。
+
+```css
+.container {
+  height: 100px;
+}
+.left {
+  float: left;
+  width: 200px;
+  height: 100px;
+  background: tomato;
+}
+.right {
+  margin-left: 200px;
+  width: auto;
+  height: 100px;
+  background: gold;
+}
+```
+
+以下给出html模板：
+
+```html
+<div class="container">
+     <div class="left"></div>
+     <div class="right"></div>
+</div>
+```
+
+## ② 浮动 + BFC
+
+- 利用**浮动**，左侧元素设置固定大小，并左浮动。
+- 右侧元素设置`overflow: hidden`; 这样右边就触发了**BFC**，**BFC**的区域不会与浮动元素发生重叠，所以两侧就不会发生重叠。
+- 对BFC不了解的，可以参考[关于BFC的理解](https://blog.csdn.net/weixin_47750287/article/details/124674483?spm=1001.2014.3001.5501)
+
+```css
+.left{
+     float: left;
+     width: 100px;
+     height: 200px;
+     background: tomato;
+ }
+ .right{
+     overflow: hidden;//触发BFC
+     height: 300px;
+     background: gold;
+ }
+```
+
+## ③ 利用flex布局
+
+利用**flex**布局，将左边元素设置为固定宽度200px，将右边的元素设置为flex:1。
+
+```css
+.container {
+  display: flex;
+  height: 100px;
+}
+.left {
+  width: 200px;
+  background: tomato;
+}
+.right {
+  flex: 1;
+  background: gold;
+}
+```
+
+## ④ 利用绝对定位
+
+- 利用**绝对定位**，将父级元素设置为**相对定位**。
+- 左边元素设置为`absolute`定位，并且固定宽度设置为200px，`left`值设置为0。
+- 将右边元素的`left`值设置为左边固定宽度200px，`right`值设置为0。
+
+```css
+.container {
+    position: relative;
+    box-sizing: border-box;
+}
+.left {
+    position: absolute;
+    left: 0;
+    width: 200px;
+    height: 200px;
+    background: tomato;
+}
+.right {
+    position: absolute;
+    left: 200px;
+    right: 0;
+    height: 300px;
+    background: gold;
+} 
+```
+
+## ⑤ 利用网格布局
+
+使用**Grid网格布局**实现两栏布局的要点在于列数为2，且首列的宽度根据需要自行设置，第二列使用片段"fr"属性进行自适应即可。
+行数不需要指定，每行会根据内容高度进行自适应缩放。
+
+- 现在给类名为`"container"`的盒子添加`"display: grid"`属性，使该盒子成为容器。
+- 再给该容器添加`"grid-template-columns: 100px 1fr"`属性，表示第一列宽度始终为100px，第二列的宽度为剩余的所有空间。
+- 此时可以看到整个容器的高度因为首列的内容被撑开了，并且右边内容区实现了自适应。
+
+```css
+.container {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    box-sizing: border-box;
+}
+.left {
+    width: 100px;
+    height: 200px;
+    background: tomato;
+}
+.right {
+    height: 300px;
+    background: gold;
+}
+```
+
+# 十六、响应式布局的概念及原理
+
+## 1、响应式布局的介绍
+
+响应式布局（respond layout）是Ethan Marcotte在2010年5月份提出的一个概念，简而言之，就是**一个网站能够兼容多个终端（pc、手机、平板）**
+
+## 2、**响应式开发的原理**
+
+动态根据当前屏幕的宽度，自动改变页面中盒子的宽度、盒子的显示或隐藏
+
+## 3、设备屏幕的分类
+
+![img](https://img-blog.csdnimg.cn/20191019103716707.png)
+
+## 4、媒体查询
+
+> 响应式原理是：**\*动态根据当前屏幕的宽度，自动改变页面中盒子的宽度、盒子的显示或隐藏***
+>
+> 所以需要根据不同屏幕的宽度改变样式。
+>
+> 可以通过css3中新增的媒体查询完成效果。
+
+**媒体查询（Media Query)**：是CSS3新增的方法，可以通过动态查询屏幕的宽度，根据不同的屏幕宽度设置样式是否生效！！
+
+**语法：**
+
+```css
+@media screen and (条件) {
+    选择器......
+}
+```
+
+**作用：** 只有当屏幕宽度满足条件时，媒体查询中的选择器才能生效！！！
+
+**注意点：** 媒体查询仅仅只是控制选择器是否生效，不会提升选择器的优先级！！
+
+**条件：**
+
+- `min-width`：样式生效的屏幕最小宽度
+
+  > 只有当屏幕宽度大于等于该宽度时，样式才会生效
+
+```css
+/* 样式生效的最小宽为600px——》只有当屏幕宽度大于等于600px时，样式才会生效！！*/
+@media screen and (min-width:600px) {
+    div {
+        width: 400px;
+        height: 400px;
+        background-color: green;
+    }
+}
+```
+
+- `max-width` ：样式生效的屏幕最大宽度
+
+  > 只有当屏幕宽度小于等于该宽度时，样式才会生效
+
+```css
+/* 样式生效的最大宽为800px——》只有当屏幕宽度小于等于800px时，样式才会生效*/
+@media screen and (max-width:800px) {
+    div {
+        width: 400px;
+        height: 400px;
+        background-color: blue;
+    }
+}
+```
+
+- `width` ：样式生效的宽度
+
+  > 只有当屏幕宽度正好等于该宽度时，样式才会生效
+
+```css
+/* 样式只在700px宽度的时候才会生效 */
+@media screen and (width:700px) {
+    div {
+        width: 400px;
+        height: 400px;
+        background-color: purple;
+    }
+}
+```
+
+**一个媒体查询中可以同时写多个条件，中间通过and连接即可**
+
+```css
+/* 样式在 600~800中间生效 */
+@media screen and (min-width:600px) and (max-width:800px) {
+    div {
+        width: 400px;
+        height: 400px;
+        background-color: orange;
+    }
+}
+```
+
+# 十七、css超出隐藏
+
+## 1.单行超出隐藏
+
+~~~css
+div {
+  overflow:hidden; //超出的文本隐藏
+  text-overflow:ellipsis; //用省略号显示
+  white-space:nowrap; //不换行
+}
+~~~
+
+2、多行超出隐藏
+
+```css
+div{
+  overflow:hidden; 
+  text-overflow:ellipsis;
+  display:-webkit-box;    //将对象作为弹性伸缩盒子模型显示。
+  -webkit-box-orient:vertical;  // 从上到下垂直排列子元素
+  -webkit-line-clamp:2; //显示的行数
+}
+```
+
+3、表格中单行超出隐藏
+
+~~~css
+table{width:100%;table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */}
+td{
+  width:100%;
+  word-break:keep-all;   // 不换行
+  white-space:nowrap;   // 不换行
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+~~~
+
+# 十八、设置小于12px的字体
+
+CSS的最小尺寸为1px，所以理论上可以将font-size设置为1px，但是实际上如果将font-size属性缩小到12px以下就没有效果了，这是因为浏览器限制了最小字体大小，这只是PC端的浏览器进行的限制，手机端默认没有开启该限制，还是可以直接通过CSS设置最小字体的。
+
+用 transform的scale缩放属性将字体缩放，**实际上并没有改变字体大小，只是将标签缩放了**，这样看起来就小了很多。
+
+~~~css
+p {
+  font-size: 12px;
+  line-height: 36px;
+  transform: scale(0.8);//缩放0.8，
+}
+~~~
+
+# 十九、背景图片的设置
+
+background属性总结：
+
+CSS 背景属性用于定义HTML元素的背景，常用的背景属性用法有以下几种：
+
+## 1.background-color(背景颜色）
+
+```css
+div{background-color:red;}
+```
+
+## 2.background-image（背景图片） 
+
+```css
+div{background-image:url("./img/banner.jpg");}
+```
+
+**注**：url小括号里是图片的地址，需要加引号
+
+## 3. background-repeat（背景平铺）
+
+默认情况下，背景图片会从水平和垂直两个方向重复铺满整个区域
+
+| 值        | 作用                                         |
+| --------- | -------------------------------------------- |
+| repeat    | 默认值，在水平方向和垂直方向都重复（默认值） |
+| no-repeat | 不重复背景图像                               |
+| repeat-x  | 只有水平位置会重复背景图像                   |
+| repeat-y  | 只有垂直方向会重复背景图像                   |
+
+ 
+
+## 4.background-attachment（背景图片固定）
+
+**background-attachment**属性定义了元素的背景图片是否固定或随着页面的其余部分滚动，有如下取值：
+
+| 值      | 作用                                                |
+| ------- | --------------------------------------------------- |
+| scroll  | 背景图片随着页面的滚动而滚动（默认）。              |
+| fixed   | 背景图片不会随着页面的滚动而滚动。                  |
+| local   | 背景图片会随着元素内容的滚动而滚动。                |
+| initial | 设置该属性的默认值。                                |
+| inherit | 指定 background-attachment 的设置应该从父元素继承。 |
+
+```css
+设置一个固定的背景图片
+body
+{ 
+    background-image:url("./img/picture.jpg");
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+}
+```
+
+## 5.background-position（背景图片位置）
+
+background-position属性设置背景图像的起始位置,有三种取值方式：
+
+| 值               | 解释                                                         |
+| ---------------- | ------------------------------------------------------------ |
+| *xpos ypos*      | 关键字定位，应用对齐规则。水平方向有left/center/right;垂直方向有top/center/bottom;取一个值时另外一个默认为center;xpos为left表示图像的左边与对象的左边对齐，同理，ypos为top时表示图像的顶部与对象的顶部对齐 |
+| x(长度）y(长度） | 第一个值是水平位置，第二个值是垂直位置。左上角是0。单位可以是像素（0px0px）或任何其他 css单位。如果仅指定了一个值，其他值将是50％。将背景图像的左上角，放置在对象背景区域（x,y）所指定的位置，即定义的是背景图片的左上角相对于背景区域左上角的偏移量 |
+| x%y%             | 第一个值是水平位置，第二个值是垂直位置。左上角是0％0％。右下角是100％100％。如果仅指定了一个值，其他值将是50％。 默认值为：0％0％ |
+
+```css
+div{background-position:center;}
+表示背景图片的中心与背景区域的中心对齐
+div{background-position:20px 30px;}
+表示背景图片的左上角顶点相对于对象背景区域的左上角顶点在x轴向右移20px,在y轴下移30px
+```
+
+## 6.background-size 属性（设置背景图片大小）
+
+| 值         | 描述                                                         |
+| ---------- | ------------------------------------------------------------ |
+| length     | 设置背景图片高度和宽度。第一个值设置宽度，第二个值设置的高度。如果只给出一个值，第二个是设置为auto(自动) |
+| percentage | 将计算相对于背景定位区域的百分比。第一个值设置宽度，第二个值设置的高度。如果只给出一个值，第二个是设置为"auto(自动)" |
+| cover      | 此时会保持图像的纵横比并将图像缩放成将完全覆盖背景定位区域的最小大小。 |
+| contain    | 此时会保持图像的纵横比并将图像缩放成将适合背景定位区域的最大大小。 |
+
+```css
+div{background-image:url("./img/banner.jpg");
+    background-size:60px 50px;
+    }
+背景图片宽度为60px,高度为50px
+```
+
+## 7.background-clip 属性
+
+.background-clip 属性定义背景的显示区域
+
+| 值          | 描述                                   |
+| ----------- | -------------------------------------- |
+| border-box  | 默认值。背景剪切在边框盒内             |
+| padding-box | 背景绘制在填充盒内（剪切成填充方框）   |
+| content-box | 背景绘制在内容盒内（剪切成内容方框）。 |
+
+## 8.background-origin 属性
+
+background-origin定义背景的渲染区域
+
+| 值          | 描述                   |
+| ----------- | ---------------------- |
+| border-box  | 边框盒的左上角开始渲染 |
+| padding-box | 填充盒的左上角开始渲染 |
+| content-box | 内容盒的左上角开始渲染 |
+
+# 二十、自定义属性
+
+自定义属性的目的：为了保存并使用数据，有些数据可以保存到数据库中
+
+## 1、自定义属性的获取是通过 getAttribute(‘属性’) 获取；
+
+[getAttribute()](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getAttribute)
+但是有的自定义属性很容易引起歧义，不容易判断是元素内置属性还是自定义属性；
+如果直接调用自定义属性会有问题 显示undefined
+
+```html
+<body>
+    <div getTime="20"></div>
+    <script>
+        var div = document.querySelector('div');
+        console.log(div.getTime);
+    </script>
+</body>
+```
+
+## 2、设置H5自定义属性：
+
+H5 规定了自定义属性[data-](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes/data-*)开头作为属性名并赋值 这样使自定义属性更加方便区分
+H5新增element.[dataset.](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLOrForeignElement/dataset)*index* 或者 element.dataset[*‘index’*] ie11才开始支持
+
+```html
+<body>
+    <div getTime="20" data-index="02"></div>
+    <script>
+        var div = document.querySelector('div');
+        console.log(div.getTime);
+        console.log('---------');
+        console.log(div.getAttribute('getTime'));
+        console.log(div.getAttribute('data-index'));
+        div.setAttribute('data-Time', 20);
+        console.log(div.getAttribute('data-Time'));
+        // h5 新增的获取自定义属性的方法
+        console.log(div.dataset.index);
+    </script>
+</body>
+```
+
+# 二十一、reset.css
+
+## 2、为什么要用reset.css
+
+因为在不同的浏览器中，HTML标签会有一些默认的属性值，但是各个浏览器会渲染出各不一样的效果，例如边距不一致、字体颜色大小行高不一样等等。为了防止出现这种情况，其实主要是为了减少代码的重复定义，提高代码复用率，提高开发效率，重设各个浏览器的默认样式，还可以解决其引起的耦合问题。
+总结就是高复用，低耦合，文件小。
+
+## 2、怎么用
+
+独立新建一个css文档来储存重置样式，就是reset.css里面只存放重置样式，其他样式可以根据[前言](https://www.cnblogs.com/tc310/p/16226663.html#01)分类分开存放css属性。这里有一个是本人参考了各大网站的reset.css整理写的[reset.css](https://link.juejin.cn/?target=https%3A%2F%2Fgithub.com%2FBelieveXIA%2Fblog%2Fblob%2Fmaster%2FCSS%2Freset.css)，文档没有绝对标准性的，很多都是根据项目的具体需求写，我总结的只是一些非常常用的重置样式，可以适用大部分项目，当然最好是理解了，每次自己根据项目需求对reset.css进行编写。
+
+[](https://www.cnblogs.com/tc310/p/16226663.html#_labelTop)
+
+## 3、reset.css说明
+
+```css
+@charset 'utf-8';
+/*这些元素都建议重新初始化*/
+body,div,dl,dt,dd,ul,ol,li,tr,td,th,
+h1,h2,h3,h4,h5,h6,hr,br,img,table,
+input,form,a,p,textarea{
+    padding:0;
+    margin:0;
+    font-family:Arial,'Microsoft YaHei','宋体';
+}
+/*去掉列表默认排列*/
+ul,ol,li{
+    list-style:none;
+}
+/*去掉底部横线*/
+/*把a元素更改设置成块级元素，这个根据实际情况决定要不要*/
+a{
+    text-decoration:none;
+    display:block;
+}
+/*img标签要清除border。*/
+/*display设为block设置为块级元素，默认为display:inline;
+存在下边线多出4px状况,所以一般设为block*/
+img{
+    border:0;
+    display:block;
+}
+/*清除浮动破坏带来的塌陷问题*/
+/*清除浮动的兼容IE*/
+.clearfloat {
+	zoom: 1;
+}
+.clearfloat:after {
+	display:block;
+	clear:both;
+	content:"";
+	visibility:hidden;
+	height:0;
+}
+```
+
