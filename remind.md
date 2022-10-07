@@ -663,6 +663,8 @@ Flex 是 Flexible Box 的缩写，意为"弹性布局"，用来为盒状模型�
 
 ## 3、flex的属性
 
+1、容器上的属性
+
 - flex-direction
 - flex-wrap
 - flex-flow
@@ -711,6 +713,111 @@ Flex 是 Flexible Box 的缩写，意为"弹性布局"，用来为盒状模型�
 - `space-between`：与交叉轴两端对齐，轴线之间的间隔平均分布。
 - `space-around`：每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍。
 - `stretch`（默认值）：轴线占满整个交叉轴。
+
+2、项目上的属性
+
+- `order`
+- `flex-grow`
+- `flex-shrink`
+- `flex-basis`
+- `flex`
+- `align-self`
+
+1 、order属性
+
+`order`属性定义项目的排列顺序。数值越小，排列越靠前，默认为0。
+
+> ```css
+> .item {
+>   order: <integer>;
+> }
+> ```
+
+2、 flex-grow属性
+
+`flex-grow`属性定义项目的放大比例，默认为`0`，即如果存在剩余空间，也不放大。
+
+> ```css
+> .item {
+>   flex-grow: <number>; /* default 0 */
+> }
+> ```
+
+3 、flex-shrink属性
+
+`flex-shrink`属性定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。
+
+> ```css
+> .item {
+>   flex-shrink: <number>; /* default 1 */
+> }
+> ```
+
+如果所有项目的`flex-shrink`属性都为1，当空间不足时，都将等比例缩小。如果一个项目的`flex-shrink`属性为0，其他项目都为1，则空间不足时，前者不缩小。
+
+负值对该属性无效。
+
+4、flex-basis属性
+
+`flex-basis`属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为`auto`，即项目的本来大小。
+
+> ```css
+> .item {
+>   flex-basis: <length> | auto; /* default auto */
+> }
+> ```
+
+它可以设为跟`width`或`height`属性一样的值（比如350px），则项目将占据固定空间。
+
+5 、flex属性
+
+`flex`属性是`flex-grow`, `flex-shrink` 和 `flex-basis`的简写，默认值为`0 1 auto`。后两个属性可选。
+
+> ```css
+> .item {
+>   flex: none | [ <'flex-grow'> <'flex-shrink'>? || <'flex-basis'> ]
+> }
+> ```
+
+该属性有两个快捷值：`auto` (`1 1 auto`) 和 none (`0 0 auto`)。
+
+建议优先使用这个属性，而不是单独写三个分离的属性，因为浏览器会推算相关值。
+
+6 、align-self属性
+
+`align-self`属性允许单个项目有与其他项目不一样的对齐方式，可覆盖`align-items`属性。默认值为`auto`，表示继承父元素的`align-items`属性，如果没有父元素，则等同于`stretch`。
+
+> ```css
+> .item {
+>   align-self: auto | flex-start | flex-end | center | baseline | stretch;
+> }
+> ```
+
+## 4、实现三点分布、3个子div实现一个对角线布局
+
+~~~css
+.wrap-box {
+    width: 500px;
+    height: 500px;
+    overflow: hidden;
+    background-color: green;
+    display: flex;
+    justify-content: space-between;
+}
+ .wrap-box .item-1,
+  .wrap-box .item-2,
+  .wrap-box .item-3 {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+}
+.wrap-box .item-2 {
+  align-self: center; // 垂直居中
+}
+.wrap-box .item-3 {
+  align-self: flex-end; // 靠右
+}
+~~~
 
 # 八、rem适配
 
@@ -1141,7 +1248,7 @@ CSS Sprites会将多个图像组合成一个称为精灵表或拼贴图的单个
 
 # 十七、css超出隐藏
 
-## 1.单行超出隐藏
+## 1、单行超出隐藏
 
 ~~~css
 div {
@@ -1151,7 +1258,7 @@ div {
 }
 ~~~
 
-2、多行超出隐藏
+## 2、多行超出隐藏
 
 ```css
 div{
@@ -1163,7 +1270,7 @@ div{
 }
 ```
 
-3、表格中单行超出隐藏
+## 3、表格中单行超出隐藏
 
 ~~~css
 table{width:100%;table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */}
@@ -1395,4 +1502,1472 @@ img{
 	height:0;
 }
 ```
+
+# 二十二、如何实现三栏布局
+
+三栏布局：两边固定，中间自适应
+
+## 1、流体布局（float布局）
+
+1.首先绘制左右两栏，左栏左浮动，右栏右浮动
+
+![img](https://img-blog.csdnimg.cn/e526bc76081d44e9930d566868409ee0.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5LuZ5aWz54ix5ZCD6bG8,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+2.再绘制中间一栏，留出左右两栏距离与间距
+
+![img](https://img-blog.csdnimg.cn/bd55df2963414da0870a6c004b1221e3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5LuZ5aWz54ix5ZCD6bG8,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+## 2、BFC布局
+
+我们先把左右两栏元素浮动，中间栏不做其他属性，发现中间栏默认撑满全屏，这时候我们就可以利用BFC不会和浮动元素重叠的规则，把中间元素改成一个BFC，使用overflow:hidden或者display: flex达到中间栏自适应。
+
+![img](https://img-blog.csdnimg.cn/a25bb497d0d3460b96d19dfbc3fa3bc5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5LuZ5aWz54ix5ZCD6bG8,size_20,color_FFFFFF,t_70,g_se,x_16)
+
+## 3、flex布局
+
+flex属性的完整写法是:flex-grow项目放大比例、flex-shrink项目缩小比例 、flex-basis项目占据属性
+
+1.项目绘制按照左中右排列
+
+2.父元素使用flex属性
+
+3.(1)左右两栏固定宽度
+赋值给元素width属性
+赋值给元素flex属性：flex: 0 1 200px(放大比例0，缩小比例1，项目宽度200px）
+(2)中间使用flex:1占据剩余空间
+
+~~~html
+<style>
+ .container {
+    border: 1px solid red;
+    display: flex;
+  }
+  .left {
+    width: 200px;
+    height: 200px;
+    background-color: aqua;
+  }
+  .right { 
+    width: 200px;
+    height: 200px;
+    background-color: aquamarine;
+  }
+  .mid {
+    background-color: cadetblue;
+    height: 200px;
+    flex-grow: 1;
+    margin-left: 20px; 
+    margin-right: 20px;
+  } 
+</style>
+
+<body>
+  <div class="container">
+    <div class="left">left</div>
+    <div class="mid">mid</div>
+    <div class="right">right</div>
+  </div>
+</body>
+~~~
+
+4、position定位
+
+1.父元素使用相对定位
+2.两侧子元素使用绝对定位
+3.中间元素不做定位处理，只留出空间就好
+
+~~~html
+ .container {
+    position: relative;
+  }
+
+  .left {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    left: 0;
+    top: 0; 
+    background-color: aqua;
+  }
+
+  .right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background-color: aquamarine;
+  }
+
+  .mid {
+    background-color: cadetblue;
+    height: 200px;
+	margin: 0 220px;
+  }
+</style>
+<body>
+  <div class="container">
+    <div class="mid">mid</div>
+    <div class="left">left</div>
+    <div class="right">right</div>
+  </div>
+</div>
+</body>
+~~~
+
+# 二十三、JavaScript的数据类型
+
+## 1、分类
+
+按照类型来分有基本数据类型和引用数据类型：
+
+**基本数据类型：**`String`、`Number`、`Boolean`、`Null`、`Undefined`、`Symbol`、BIgInt
+
+**引用数据类型：**`Object`【Object是个大类，function函数、array数组、date日期...等都归属于Object】
+
+## 2、数据类型的判断
+
+**typeof, instanceof, constructor, Object.prototype.toString.call()**
+
+1. `typeof:` 基本类型大部分都能被准确检测并返回正确的字符串（`除了 Null 类型`，其返回 object 字符串），而引用类型大部分都不能够被准确检测（`除了 Function 类型能够准确返回 function 字符串外`，其它的都返回了 object 字符串）。
+2. `instanceof:` instanceof 运算符用来测试一个对象在其原型链中是否存在一个构造函数的 prototype 属性。即判断对象是否是某一数据类型（如Array）的实例。`只有引用数据类型（Array，Function，Object）被精准判断，其他（数值Number，布尔值Boolean，字符串String）等基本数据类型不能被instanceof精准判断`。
+
+2.1 typeof
+
+```javascript
+console.log(typeof 7); // number
+console.log(typeof '7'); // string
+console.log(typeof false); // boolean
+console.log(typeof [false]); // object
+console.log(typeof function () {}); // function
+console.log(typeof {}); // object
+console.log(typeof undefined); // undefined
+console.log(typeof null); // object
+```
+
+2.2 instanceof
+
+```javascript
+    console.log(7 instanceof Number); // false
+    console.log('7' instanceof String); // false
+    console.log(false instanceof Boolean); // false
+    console.log([] instanceof Array); //true
+    console.log(function () {} instanceof Function); // true
+    console.log({} instanceof Object); // true
+    // undefined is not a constructor
+    // null is not a constructor
+```
+
+2.3 constructor
+
+```javascript
+    console.log((7).constructor === Number); // 全为true
+    console.log(('7').constructor === String); //
+    console.log(false.constructor === Boolean); //
+    console.log((function () {}).constructor === Function); //
+    console.log(({}).constructor === Object); //
+    console.log(([]).constructor === Array); //
+
+    function Test() {}
+    Test.prototype = new Array();
+    let f = new Test();
+    console.log(f.constructor === Function) // false
+    console.log(f.constructor === Test)  // false
+    console.log(f.constructor === Array)  // true
+```
+
+2.4 Object.prototype.toString.call()
+
+```javascript
+    let too = Object.prototype.toString;
+    console.log(too.call(7)); // [object Number]
+    console.log(too.call('7')); // [object String]
+    console.log(too.call(false)); // [object Boolean]
+    console.log(too.call([])); // [object Array]
+    console.log(too.call({})); // [object Object]
+    console.log(too.call(function () {})); // [object Function]
+    console.log(too.call(undefined)); // [object Undefined]
+    console.log(too.call(null)); // [object Null]
+```
+
+# 二十四、判断数组的方法
+
+## 1.通过instanceof判断
+
+instanceof运算符用于检验构造函数的prototype属性是否出现在对象的原型链中的任何位置，返回一个布尔值
+
+```javascript
+let a = [];
+a instanceof Array; //true
+let b = {};
+b instanceof Array; //false
+
+//instanceof 运算符检测Array.prototype属性是否存在于变量a的原型链上
+//显然a是一个数组，拥有Array.prototype属性，所以为true
+```
+
+## 2.通过constructor判断
+
+实例的构造函数属性constructor指向构造函数，通过constructor属性可以判断是否为一个数组
+
+```javascript
+let a = [7,8,9];
+a.constructor === Array;  //true
+```
+
+## 3.通过Object.prototype.toString.call()判断
+
+Object.prototype.toString.call()可以获取到对象的不同类型
+
+```javascript
+let a = [7,8,9];
+Object.prototype.toString.call(a) === '[Object Array]';  //true
+```
+
+## 4.通过Array.isArray()判断
+
+Array.isArray()用于确定传递的值是否是一个数组，返回一个布尔值
+
+```javascript
+let a = [7,8,9];
+Array.isArray(a);  //true
+```
+
+有个问题是Array.isArray()是ES5新增的方法，目的就是提供一个稳定可用的数组判断方法，对于ES5之前不支持此方法的问题，我们其实可以做好兼容进行自行封装，如下：
+
+```javascript
+if(!Array.isArray){
+  Array.isArray = function(argument){
+    return Object.prototype.toString.call(argument)  === '[object Array]';
+  }
+};
+```
+
+5.补充：typeof
+typeof 只能检测 基本数据类型，包括boolean、undefined、string、number、symbol，而null ,Array、Object ,使用typeof出来都是Object，函数的typeof 是function 无法检测具体是哪种引用类型。
+
+```javascript
+console.log(typeof(100),1); 	      result:  number  1			 
+console.log(typeof("name"),2); 	      result:  string  2 
+console.log(typeof(false),3); 		result:  boolean  3
+console.log(typeof(null),4); 		result:  object 4
+console.log(typeof(undefined),5); 	result:  undefined 5
+console.log(typeof([]),6); 		        result:  object  6
+console.log(typeof(Function),7); 	result:  function  7
+```
+
+# 二十五、伪数组
+
+### 1、伪数组的特点
+
+1. 伪数组拥有数组的属性，
+   -具有 length 属性 但length属性不是动态的，不会随着成员的变化而变化
+   -按索引方式储存数据
+   -不具有数组的push()， forEach()等方法
+2. 伪数组本质是一个 Object，而真实的数组是一个 Array。
+   伪数组的原型 `Object.__prototype__` 通过改变原型指向可以将伪数组转为真数组
+
+### 2、常见伪数组
+
+1. 函数内部的 arguments，扩展操作符可以将 arguments 展开成独立的参数
+2. DOM 对象列表 如 通过 document.getElementByTags 获取的 dom元素
+3. jQuery对象 如 $(‘div’)
+
+```css
+// 伪数组
+var arrLike = {
+    0: 'a',
+    1: 'b',
+    2: 'c',
+    length: 3,
+};
+```
+
+### 3、伪数组转为真数组
+
+1. 遍历添加入一个空数组
+
+```css
+var arr = [];
+for(var i = 0; i < arrLike.length; i++){
+   arr.push(arrLike[i]);
+}
+```
+
+1. 利用数组的slice()方法
+
+```css
+;[].slice.call(arrLike);
+//slice() 方法以新的数组对象，返回数组中被选中的元素。
+```
+
+或者
+
+```css
+Array.prototype.slice.apply(arrLike);
+```
+
+> 使用slice()返回一个新的数组,用call()或apply()把他的作用环境指向伪数组。slice 返回的数组中，**不会保留索引值以外的其他额外属性。**
+
+模拟 slice() 内部实现
+
+```javascript
+Array.prtotype.slice = function(start, end){
+        var result = new Array();
+        var start = start | 0;
+        var end = end | this.length;
+
+        for(var i = start; i < end; i++){
+            result.push(this[i]);
+        }
+        return result;
+    }
+```
+
+1. 改变原型指向
+
+```javascript
+arrLike.__proto__ = Array.prototype;
+```
+
+通过改变原型指向，arrLike就继承了Array.prototype中的方法，可以使用push()，unshift()等方法了，length值也会随之动态改变。
+
+> 这种直接修改原型链的方法，还会保留下伪数组中的所有属性，**包括不是索引值的属性**。
+
+1. Array.from()
+   Array.from() 方法从一个类似数组或可迭代对象中创建一个新的数组实例。
+
+```javascript
+ var arr = Array.from(arrLike);
+```
+
+**只保留索引值内的属性**。
+
+# 二十六、遍历数组的方法
+
+## 1. some()
+
+[遍历](https://so.csdn.net/so/search?q=%E9%81%8D%E5%8E%86&spm=1001.2101.3001.7020)数组，只要有一个以上的元素满足条件就返回 true，否则返回 false ，退出循环
+
+对[数组](https://so.csdn.net/so/search?q=%E6%95%B0%E7%BB%84&spm=1001.2101.3001.7020)中每个元素执行一次ok函数，知道某个元素返回true，则直接返回true。如果都返回false,则返回false
+
+检查整个数组中是否有满足元素。
+
+​    private some(id: number) {
+      const arr = [
+        { cityId: 195, cityName: '深圳'},
+        { cityId: 196, cityName: '北京'},
+        { cityId: 198, cityName: '上海'}
+      ]
+      let result = arr.some((item: any) => {
+        return item.cityId === id
+      })
+      console.log(`传入:${id},结果:${result}`)
+    }
+
+## 2. every()
+
+遍历数组，每一个元素都满足条件 则返回 true，否则返回 false
+
+​    private every() {
+      const arr = [1,2,3,4,5]
+      let result = arr.every((item: any) => {
+        return item > 0
+      })
+      console.log(`结果:${result}`)
+    }
+
+​    private every() {
+      const arr = [1,2,3,4,5]
+      let result = arr.every((item: any) => {
+        return item > 10
+      })
+      console.log(`结果:${result}`)
+    }
+
+## 3. forEach() 
+
+数组里的元素个数有几个，该方法里的回调就会执行几次
+
+第一个参数是数组里的当前元素，第二个参数为数组里当前元素的索引值，第三个参数则是它自己
+没有返回值，本质上等同于 for 循环，对每一项执行 function 函数。即map是返回一个新数组，原数组不变，forEach 是改变原数组。
+不支持 continue，用 return false 或 return true 代替。
+不支持 break，用 try catch/every/some 代替
+数组自带的遍历方法，虽然使用频率略高，但是性能仍然比普通循环略低
+    private forEach() {
+      type itemType = {
+        cityId: number,
+        cityName: string
+      }
+      const arr = [
+        { cityId: 195, cityName: '深圳'},
+        { cityId: 196, cityName: '北京'},
+        { cityId: 197, cityName: '上海'}
+      ]
+      arr.forEach((item: itemType, index: number, arr: any) => {
+        console.log(`index:${index}，item:${JSON.stringify(item)}，arr:${JSON.stringify(arr)}`)
+      })
+    }
+
+##  4. map()
+
+map() 方法返回一个新数组，数组中的元素为原始数组元素调用函数处理后的值。map() 方法按照原始数组元素顺序依次处理元素。
+
+使用比较广泛，但其性能还不如 forEach
+不会改变原始数组。
+      let arr = [1, 2, 3, 4, 5, 6]
+      let newArr = arr.map((item: any) => {
+        return item * item
+      })
+      console.log(newArr)
+
+## 5. filter()方法
+
+创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。不会改变原始数组。
+
+​    private filter(id: number): string {
+      const arr = [
+        { cityId: 195, cityName: '深圳'},
+        { cityId: 196, cityName: '北京'},
+        { cityId: 197, cityName: '上海'}
+      ]
+      let name: string = ''
+      arr.filter((item: any) => {
+        if(item.cityId === id) {
+          name = item.cityName
+        }
+      })
+      console.log(`传入:${id}，结果:${name}`)
+      return name
+    }
+
+## 6. find()
+
+遍历数组，返回符合条件的第一个元素，如果没有符合条件的元素则返回 undefined
+
+​      let arr = [1,2,2,3,3,3,3,4,4,5,6]
+      let num = arr.find((item:any) => {
+        return item === 3
+      })
+      console.log(num)
+
+​      let arr = [1,2,2,3,3,3,3,4,4,5,6]
+      let num = arr.find((item:any) => {
+        return item === 10
+      })
+      console.log(num)
+
+##  7. findIndex()
+
+遍历数组，返回符合条件的第一个元素的索引，如果没有符合条件的元素则返回 -1
+
+​      let arr = [1,2,2,3,3,3,3,4,4,5,6]
+      let num = arr.findIndex((item:any) => {
+        return item === 2
+      })
+      console.log(num)
+
+​      let arr = [1,2,2,3,3,3,3,4,4,5,6]
+      let num = arr.findIndex((item:any) => {
+        return item === 10
+      })
+      console.log(num)
+
+## 8. for…of…（ES6）自动解构
+
+for of不能对象用
+
+​      const arr = [
+        { cityId: 195, cityName: '深圳'},
+        { cityId: 196, cityName: '北京'},
+        { cityId: 197, cityName: '上海'}
+      ]
+      for(const {cityId, cityName} of arr) {
+        console.log(cityId, cityName)
+      }
+
+## 9. for…in…
+
+for...in 语句用于遍历数组或者对象的属性（对数组或者对象的属性进行循环操作）。for in得到对对象的key或数组,字符串的下标
+
+​      const arr = [
+        { cityId: 195, cityName: '深圳'},
+        { cityId: 196, cityName: '北京'},
+        { cityId: 197, cityName: '上海'}
+      ]
+      const obj = { cityId: 195, cityName: '深圳'}
+      for(const key in arr) {
+        console.log(`数组key-${key}`)
+      }
+      for(const key in obj) {
+        console.log(`对象key-${key}`)
+      }
+
+## 10. for
+
+最简单的一种循环遍历方法，也是使用频率最高的一种，可优化
+
+​      const arr = [
+        { cityId: 195, cityName: '深圳'},
+        { cityId: 196, cityName: '北京'},
+        { cityId: 197, cityName: '上海'}
+      ]
+      for(let i = 0; i < arr.length; i++) {
+        console.log(arr[i])
+      }
+
+**四种遍历方法对于100万的循环时间**
+
+**for最快，但可读性比较差**
+
+**forEach比较快，能够控制内容**
+
+**for....of比较慢，香**
+
+**for...in比较慢，不方便**
+
+# 二十七、null和undefined区别
+
+### 1.深层定义
+
+- null 指空对象，但它是被定义过的
+- undefined 指声明未赋值的对象或者是不存在的对象属性值
+
+### 2.逻辑上
+
+你可以定义一个值为null，证明它是空的，但如果你定义它是undefined（未被定义的），逻辑上不合理，尽管你可以这样做
+
+### 3.典型用法
+
+null：
+
+（1）作为函数的参数，来表示该函数的参数不是对象
+
+（2）作为对象原型链的终点
+
+```javascript
+Object.getPrototypeOf(Object.prototype)
+// null
+```
+
+undefined：
+
+（1）变量被声明了，但没有赋值时，就等于undefined。
+
+（2) 调用函数时，应该提供的参数没有提供，该参数等于undefined。
+
+（3）对象没有赋值的属性，该属性的值为undefined。
+
+（4）函数没有返回值时，默认返回undefined。
+
+# 二十八、为什么0.1+0.2 != 0.3?
+
+要解决这个问题，首先要明白计算机底层的编码原理，计算机是采用[二进制](https://so.csdn.net/so/search?q=%E4%BA%8C%E8%BF%9B%E5%88%B6&spm=1001.2101.3001.7020)方式存储数据的，也就是我们常说的01代码
+
+0.1的二进制是`0.0001100110011001100...`（1100循环），0.2的二进制是：`0.00110011001100...`（1100循环），这两个数的二进制都是无限循环的数
+
+再回到JavaScript的数据类型，关于数字的只有一种类型，Number，它使用64位固定长度来表示，也就是标准的double双精度浮点数，在二进制中记住一个原则，**遵循0舍1入**
+
+所以，0.1+0.2 = 0.30000000000000004
+
+那么如何让其相等呢？
+
+在ES6中【推荐阮一峰的ES6入门】，新增了一个**Number.EPSILON**方法，它可以用来**设置“能够接受的误差范围"**
+
+例子：只要判断0.1+0.2-0.3是否小于Number.EPSILON，如果小于，就可以判断为0.1+0.2===0.3
+
+```javascript
+function withinErrorMargin (left, right) {
+  return Math.abs(left - right) < Number.EPSILON * Math.pow(2, 2);
+}
+
+0.1 + 0.2 === 0.3 // false
+withinErrorMargin(0.1 + 0.2, 0.3) // true
+```
+
+# 二十九、值转换规则
+
+## 1、其他值到Boolean值的转化规则
+
+~~~javascript
+在js中存在的假值为:
+undefined, null, +0, -0, NaN, false, ""(空串)
+
+console.log(Boolean(undefined))   //false
+console.log(Boolean(null))        //false
+console.log(Boolean(+0))          //false
+console.log(Boolean(-0))          //false
+console.log(Boolean(NaN))         //false
+console.log(Boolean(false))       //false
+console.log(Boolean(""))          //false
+除此之外,其他值均为Boolean类型。
+~~~
+
+## 2、其他值到字符串的转换规则
+
+**1、null和undefined转换为字符串**
+
+```javascript
+String(null)    //‘null’
+String(undefined)  //‘undefined’
+```
+
+**2、Boolean转化为字符串**
+
+```javascript
+String(true)    //'true'
+String(false)   //‘false’
+```
+
+**3、Number类型数据转换为字符串**
+
+```javascript
+console.log(String(10))     //“10”
+console.log(String(0.000000000000000000001))   //“1e-21”
+console.log(String(10000000000000000000000))   //“1e+22”
+```
+
+**4、Symbol类型转换为字符串**
+
+```javascript
+//Symbol类型的数据显示转化为字符串不报错，但是隐式转换就报错
+console.log(String(Symbol(11)))   //“Symbol(11)”
+console.log(Symbol(11) + "")      //报错
+```
+
+**5、对象类型转化为字符串类型**
+
+```javascript
+如果是普通对象，调用toString方法，则显示[object object],Object.prototype上存在一个方法，为toString方法，例如像数组这样的可以调用该方法，则会打印出tag。
+Object.prototype.toString.call([])    //[object array]
+```
+
+## 3、其他值转化为数字类型的规则
+
+**1、undefined类型转化为数字类型**
+
+```javascript
+Number(undefined)    //NaN
+```
+
+**2、null类型转化为数字类型**
+
+```javascript
+Number(null)       //0
+```
+
+**3、Boolean值类型转化为数字类型**
+
+```javascript
+Number(true)   //1
+Number(false)   //0
+```
+
+**4、字符串类型转换为数字类型**
+
+```javascript
+Number("123s")  //NaN
+Number("123")   //123
+如果传入的只含有数字的字符串，则直接转化为数字，如果包含其他非数字的字符串，则返回NaN.
+```
+
+**5、Symbol类型转化为数字类型**
+
+```javascript
+Number("Symbol(12)")    //报错
+```
+
+**6、对象类型转化为数字类型**
+
+```javascript
+对象类型的数据首先先转化为基本数据类型，转化之后，再按照上述几点进行转换。
+对象内部使用toPrimitive(input)来解决问题，
+具体的解决方案：如果input为基本数据类型则直接返回，如果不是，则调用
+valueOf方法，如果是基本数据类型，则返回。否则再调用toString()方法，如果
+是基本数据类型则返回，否则报错。
+例子：
+console.log([1,2,3] == '1,2,3')   //true
+这个是因为右边是基本数据类型，左边使用[1,2,3].toString()转换为基本数据类
+型，
+console.log("play" == true)  //这里左边执行toPrimity()转化为NaN,右边
+转换为1  
+```
+
+# 三十、&& 和 || 的区别
+
+**一、概念**
+
+与其他语言不同，在js中，逻辑运算符可以返回任何类型的数据，不仅仅是true和false。
+
+&&和||的返回值是两个操作数的其中一个。即a&&b或者a||b返回的是要么是a，要么是b，而其他语言中返回的是true or false。
+
+在js逻辑运算中，需要隐式的转换为boolean类型再来运算，**转换规则**为：
+
+\1. 对象、非零number、非空string——>true
+
+2. 0、""、null、false、undefined、NaN——>false
+
+具体见下表：
+
+| 数据类型     | 转换为boolean后的值 |
+| ------------ | ------------------- |
+| NAN          | FALSE               |
+| null         | FALSE               |
+| undefined    | FALSE               |
+| Object       | TRUE                |
+| Function     | TRUE                |
+| 0            | FALSE               |
+| 非零的数字   | TRUE                |
+| ""(空字符串) | FALSE               |
+| 非空字符串   | TRUE                |
+
+因此：
+
+a && b : 将a, b转换为Boolean类型, 再执行逻辑与, 如果结果是true返回b, false返回a
+a || b : 将a, b转换为Boolean类型, 再执行逻辑或, 如果结果是false返回b, true返回第一个为true的值。
+
+**逻辑&&和逻辑||还有一个短路原则：知道了前面第一个的结果就知道最后的输出**
+
+**a&&b：左操作数为假值时，返回左操作数，否则返回右操作数。a||b：左操作数为假值时，返回右操作数，否则返回左操作数。**
+
+只要“||”前面为false,不管“||”后面是true还是false，都返回“||”后面的值。
+
+只要“||”前面为true,不管“||”后面是true还是false，都返回“||”前面的值。
+
+只要“&&”前面是false，无论“&&”后面是true还是false，结果都将返“&&”前面的值;
+
+只要“&&”前面是true，无论“&&”后面是true还是false，结果都将返“&&”后面的值;
+
+同样对于多个操作数的情况：
+
+a||b||c||d：若结果为true则返回第一个true值，若结果为false则返回最后一个操作数。eg：var a = “” || null || 3 || 2 -> var a = fasel || false || true || true 结果为true 则返回第一个true,即是3
+
+a&&b&&c&&d：若结果为false则返回第一个false，若结果为true则返回最后一个操作数。eg：var b = 2&&null&&1&&0 -> var b = true&&false&&true&&false结果是false 则返回第一个false 即是null
+
+# 三十一、比较操作符== 和 === 的区别
+
+两者都是判断等式两边是否相等，最大的区别就是==会进行类型的转换之后再判断两者是否相等，而===不会进行数据类型的转换，先判断两边的数据类型是否相等，如果数据类型相等的话才会进行接下来的判断，再进行等式两边值得判断，可以理解为只有等式两边是全等（数据类型相同，值相同）的时候结果才会是true，否则全为false。
+
+==判断等式两边是否相等的情况：
+
+（1）null、undefined和不同类型比较，都是false（null和undefined结果为true）
+
+（2）NaN和任何数据进行比较，都是false（包括NaN和NaN相比较也为false）
+
+（3）布尔值是转换为数字1或0再和其他数据进行比较
+
+​             拓展：   不同数据转换成布尔值的结果：              
+
+```javascript
+        console.log(Boolean(''));       //false
+        console.log(Boolean({}));       //true
+        console.log(Boolean([]));       //true
+        console.log(Boolean(null));     //false
+        console.log(Boolean(undefined)); //false
+        console.log(Boolean(NaN));      //false
+        console.log(Boolean(Object));   //true
+```
+
+（4）数字和其他简单数据类型进行比较时，会尝试将其他数据类型转换成数值型再进行比较
+
+​                **其他数据类型默认转数字使用的是Number()  
+
+```javascript
+        console.log(""==false);     //true
+        console.log(parseInt(""));   //NaN
+        console.log(Number(""));   //0
+        console.log(""==0);         //true
+```
+
+（5）对象和其他简单数据类型进行比较的时候，会尝试使用对象的valueOf()和toString()方法将对象转换为原始值进行比较：
+
+​        ①对象.toString()返回值只有[ object Object ]                
+
+```javascript
+        let obj = {
+            name:'leon',
+            age:18
+        };
+        console.log(obj.toString());    //[object Object]
+        console.log(obj.valueOf());     //{name: 'leon', age: 18}
+```
+
+```javascript
+        let obj = {};
+        console.log(obj.toString());    //[object Object]
+        console.log(obj.valueOf());     //{}
+```
+
+​        ②数组  [ ].toString()返回值是空  其他数组.toString()返回值是字符 ，一个成员一个字符逗号分隔   
+
+```javascript
+        let arr1=[1,2,3];
+        console.log(arr1.toString());    //1,2,3
+        console.log(arr1.valueOf());     //[1, 2, 3]
+        let arr=[];       
+        console.log(arr.toString());    //空
+        console.log(arr.valueOf());     //[]
+```
+
+​        ③其他的对象function  reg  返回字符串        
+
+```javascript
+        function fn(){
+            console.log("你是最棒的！");
+        }
+        console.log(fn.toString());    
+        console.log(fn.valueOf());   
+        let reg = /^[^_$]\w{5,}@(163|126|qq|sina)\.(com|cn|net)$/;
+        console.log(reg.toString());    
+        console.log(reg.valueOf()); 
+```
+
+（6）两者同为引用类型时，必须是指向同一个引用地址才相等，否则不相等
+
+（7）-0 == +0   结果为：true
+
+全等比较（===）不转换数据类型，数据类型和内容必须完全一致才是相等
+
+全等比较（===）两边是否相等的情况：
+
+（1）类型不同，一定不相等
+
+（2）两个同为数值，并且相等，则相等；若其中一个为NaN，一定不相等
+
+（3）两个都为字符串，每个位置的字符都一样，则相等
+
+（4）两个同为true,或是false，则相等
+
+（5）两个值都引用同一个对象或函数，则相等，否则不相等（引用类型地址空间可能不一样）
+
+（6）两个值都为null，或undefined，则相等
+
+（7*）两者同为引用类型时，必须是指向同一个引用地址才相等，否则不相等（5的补充）
+
+（8）-0 === +0   结果为：true
+
+# 三十二、判断NAN
+
+NaN与自己都不相等，这个时候就不能用‘===’来判断，那我们用全局函数isNaN()，但是这个函数存在一个问题，当函数里面是[字符串](https://so.csdn.net/so/search?q=%E5%AD%97%E7%AC%A6%E4%B8%B2&spm=1001.2101.3001.7020)的时候，就会返回true，因为isNaN()的实现原理是先用Number()把里面内容转换成数字类型，当里面的内容转出来是数字的，那么isNaN()的结果就是false，不是数字是其他的话，返回值就是true，但是Number已经把里面的东西转换成数字类型了，所以出来的只要不是数字那么都会是NaN。
+
+为解决这个问题我们可以这样做：
+1：在使用isNaN()之前先检查一下这个值是不是数字类型，这样就避免了隐式转换的问题：
+
+```javascript
+ function f1(value) {
+
+        if (typeof value==='number'&&isNaN(value)) {
+           alert('这是NaN');
+        }else{
+            alert('这不是NaN');
+        }
+    }
+    f1('abc'-1);123456789
+```
+
+2:用自身特性，与自己不相等来判断
+
+```javascript
+ function f1(value) {
+
+        if (value!=value) {
+           alert('这是NaN');
+        }else{
+            alert('这不是NaN');
+        }
+    }
+    f1('abc');
+```
+
+# 三十三、获取dom元素节点的方法
+
+DOM 是一个树形结构，操作一个DOM节点，实际上就是这几个操作：更新、删除、添加、遍历
+
+在操作DOM节点之前，需要通过各种方式先拿到这个DOM节点，常用的方法有：
+
+## 1、通过元素类型的方法来操作：
+
+1. document.getElementById();//id名，在实际开发中较少使用，选择器中多用class  id一般只用在顶级层存在 不能太过依赖id
+2. document.getElementsByTagName();//标签名
+3. document.getElementsByClassName();//类名
+4. document.getElementsByName();//name属性值，一般不用
+5. document.querySelector();//css选择符模式，返回与该模式匹配的第一个元素，结果为一个元素；如果没找到匹配的元素，则返回null
+6. document.querySelectorAll()//css选择符模式，返回与该模式匹配的所有元素，结果为一个类数组
+
+## 2、根据关系树来选择（遍历节点树）：
+
+**【**先简单介绍一下节点：
+
+DOM（文档对象模型）可以将任何HTML、XML文档描绘成一个多层次的节点树。所有的页面都表现为以一个特定节点为根节点的树形结构。html文档中根节点为document节点。
+
+所有节点都有nodeType属性，代表节点的不同类型，通过nodeType属性可以来判断节点的类型。经常使用的节点主要有以下几种类型：
+
+1. Element类型（元素节点）：nodeType值为 1
+
+2. Text类型（文本节点）：nodeType值为 3
+
+3. Comment类型（注释节点）：nodeType值为 8
+
+4. Document类型（document节点）：nodeType值为 9；其规定的一些常用的属性有
+
+   document.body    document.head  分别为HTML中的 <body><head>
+
+   document.documentElement为<html>标签
+
+所有的节点都有   hasChildNodes()方法    判断有无子节点  有一个或多个子节点时返回true**】**
+
+通过一些属性可以来遍历节点树：
+
+1. parentNode//获取所选节点的父节点，最顶层的节点为#document
+2. childNodes //获取所选节点的子节点们 
+3. firstChild //获取所选节点的第一个子节点
+4. lastChild //获取所选节点的最后一个子节点
+5. nextSibling //获取所选节点的后一个兄弟节点  列表中最后一个节点的nextSibling属性值为null
+6. previousSibling //获取所选节点的前一兄弟节点   列表中第一个节点的previousSibling属性值为null
+
+## 3、基于元素节点树的遍历（遍历元素节点树）：
+
+1. parentElement　//返回当前元素的父元素节点（IE9以下不兼容）
+2. children  // 返回当前元素的元素子节点
+3. firstElementChild //返回的是第一个元素子节点（IE9以下不兼容）
+4. lastElementChild  //返回的是最后一个元素子节点（IE9以下不兼容）
+5. nextElementSibling  //返回的是后一个兄弟元素节点（IE9以下不兼容）
+6. previousElementSibling  //返回的是前一个兄弟元素节点（IE9以下不兼容）
+
+# 三十四、变量提升与函数提升
+
+## 1、变量提升
+
+  变量提升即将变量声明提升到它所在[作用域](https://so.csdn.net/so/search?q=%E4%BD%9C%E7%94%A8%E5%9F%9F&spm=1001.2101.3001.7020)的最开始的部分。
+
+- **通过var定义（声明）的变量，在定义语句之前就可以访问到；**
+- **值：undefined；**
+
+```javascript
+	console.log(a); //undefined
+	var a = 1;
+```
+
+  因为有变量提升的缘故，上面代码实际的执行顺序为：
+
+```javascript
+	var a;
+	console.log(a);
+	a = 1;
+```
+
+## 2、函数提升
+
+  js中创建函数有两种方式：[函数声明](https://so.csdn.net/so/search?q=%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E&spm=1001.2101.3001.7020)式和函数表达式
+  **1、函数声明提升**
+
+```javascript
+	function fun() {
+	    console.log('函数声明式');
+	}
+```
+
+  **js在执行之前，会把foo函数提升到最前面**，所以我们在fun函数定义之前就可以使用fun函数。
+  举个栗子来说明下：
+
+```javascript
+	fun();
+	function fun(){
+		console.log("aa");
+	}
+```
+
+  打印结果为aa；说明以函数声明来定义函数时，可以在定义函数之前访问到定义的函数。
+
+  **2、函数表达式提升**
+
+```javascript
+	var fun = function() {
+	    console.log('函数表达式');
+	};
+```
+
+  此种声明方式我们可以理解为**一个普通变量的提升**，在js代码执行之前会把fun提升带最前面，**在函数赋值之前，fun是undefined，如果调用fun(),将会报错**。
+
+  再举个栗子来理解下：
+
+```javascript
+	fun();
+	var fun = function (){
+	    console.log("aa");
+	}
+```
+
+  此时打印的结果为报错`Uncaught TypeError: fun is not a function`，因为在js代码执行之前，会把fun提升到最前面，值为undefined，不是一个函数，以函数的形式来进行调用时将会报错。
+
+# 三十五、css如何做三角形
+
+**第一步**
+
+首先，先来一个div，然后给这个div加一层border，并且给上下左右border分别加上不同颜色，以便观察，代码和效果如下：
+
+~~~css
+.trangle{
+
+　　width: 100px;
+
+　　height: 100px;
+
+　　border: 100px solid #000;
+
+　　border-top-color: red;
+
+　　border-bottom-color: yellow;
+
+　　border-left-color: blue;
+
+　　border-right-color: green;
+
+}
+<div class="trangle"></div>
+~~~
+
+![img](https://img.php.cn/upload/article/000/000/024/b68147dd7f1055b2b2dd935be0d0bbf7-0.png)
+
+**第二步**
+
+接着，将这个div的width变为0，我们再来看看效果。可以看到，由于div的宽度变成了0，左右两边的border“吸”在了一起，同时上下的border变成了三角形，好像快要完成了，别急，再看看第三步。
+
+~~~css
+.trangle{
+
+　　width: 0px;
+
+　　height: 100px;
+
+　　border: 100px solid #000;
+
+　　border-top-color: red;
+
+　　border-bottom-color: yellow;
+
+　　border-left-color: blue;
+
+　　border-right-color: green;
+
+}
+
+<div class="trangle"></div>
+~~~
+
+
+
+![img](https://img.php.cn/upload/article/000/000/024/b68147dd7f1055b2b2dd935be0d0bbf7-1.png)
+
+**第三步**
+
+然后，再将这个div的height变为0，效果如下。我们可以看到，由于div的高度也变成了0，上下两个border也“吸”在了一起，同时上下的border也变成了三角形，到现在为止，四个三角形已经出来了。
+
+~~~css
+.trangle{
+
+　　width: 0px;
+
+　　height: 0px;
+
+　　border: 100px solid #000;
+
+　　border-top-color: red;
+
+　　border-bottom-color: yellow;
+
+　　border-left-color: blue;
+
+　　border-right-color: green;
+
+}
+
+<div class="trangle"></div>
+~~~
+
+![img](https://img.php.cn/upload/article/000/000/024/b68147dd7f1055b2b2dd935be0d0bbf7-2.png)
+
+**第四步**
+
+最后，就看你想要哪个角啦，想要哪个角就把其余三个border设为透明即可。例如，我想要最上面的三角形，那就把下、左、右设为透明，代码和效果如下：
+
+~~~css
+.trangle{
+
+　　width: 0px;
+
+　　height: 0px;
+
+　　border: 100px solid #000;
+
+　　border-top-color: red;
+
+　　border-bottom-color: transparent;
+
+　　border-left-color: transparent;
+
+　　border-right-color: transparent;
+
+}
+<div class="trangle"></div>
+~~~
+
+![img](https://img.php.cn/upload/article/000/000/024/aa194d34faf0196417150483f4dd9a7f-3.png)
+
+**简化代码**
+
+其实，我们不需要把四个border都设置一遍，只需设置你想要画的三角形所涉及到的三条边的border即可。以上步的画最上面的三角形为例，只需设置上、左、右三条边即可，并且要上三角形，就把左右border设为透明，代码和效果如下：
+
+~~~css
+.trangle{
+
+　　width: 0px;
+
+　　height: 0px;
+
+　　border-top: 100px solid red;
+
+　　border-left: 100px solid transparent;
+
+　　border-right: 100px solid transparent;
+
+}
+
+<div class="trangle"></div>
+~~~
+
+# 三十六、对象的拷贝
+
+## **一、预备知识**
+
+1、对象拷贝是什么
+
+对象拷贝就是将一个对象的属性拷贝到另一个有着相同属性类类型的对象中去。
+主要是为了在新的上下文环境中复用对象的部分或全部数据。
+
+![img](https://pic2.zhimg.com/80/v2-3f991e9428426a315f2f61079ce56f1d_720w.webp)
+
+从上面的图中可以看到：
+
+基础类型：是按照**值** 存放在**栈中，**占用的内存空间的大小是确定的，并由系统自动分配和自动释放。
+引用类型： 是按照**地址** 存在堆中，将存放在栈内存中的地址赋值给接收的变量。当我们想要访问引用类型的值的时候，需要先从栈中获得对象的地址指针，然后，在通过地址指针找到堆中的所需要的数据。
+
+**1.1、JS数据类型**
+
+基本数据类型：Boolean、String、Number、null、undefined
+引用数据类型：Object、Array、Function、RegExp、Date等
+
+**1.2、数据类型的复制**
+
+基本数据类型的复制，是按值传递的
+
+引用数据类型的复制，是按引用传值
+
+**1.3、深拷贝与浅拷贝**
+
+**深拷贝:**主要是将另一个对象的属性值拷贝过来之后，另一个对象的属性值并不受到影响，因为此时它自己在堆中开辟了自己的内存区域，不受外界干扰。
+**浅拷贝:**主要拷贝的是对象的引用值，当改变对象的值，另一个对象的值也会发生变化。
+
+因此，如果在对对象进行赋值时，如果不希望共享对象，那么就要进行深拷贝。
+
+深拷贝和浅拷贝都只针对引用数据类型，浅拷贝会对对象逐个成员依次拷贝，但只复制内存地址，而不复制对象本身，新旧对象成员还是共享同一内存；深拷贝会另外创建一个一模一样的对象，新对象跟原对象不共享内存，修改新对象不会改到原对象。
+
+区别：浅拷贝只复制对象的第一层属性，而深拷贝会对对象的属性进行递归复制。
+
+**二、JS浅拷贝**
+
+**2.1、赋值与浅拷贝**
+
+当把一个对象赋值给一个新的变量时，赋的对象是该对象在栈中的地址，而不是堆中的数据。也就是新旧两个对象指的是同一个存储空间，无论哪个对象发生改变，其实都是改变的存储空间的内容，两个对象联动的会一起改变。
+
+~~~javascript
+var obj1 = {
+  'name' : 'zhangsan',
+  'language' : [1,[2,3],[4,5]],
+};
+var obj2 = obj1;
+obj2.name = "lisi";
+obj2.language[1] = ["二","三"];
+console.log('obj1',obj1)
+console.log('obj2',obj2)
+~~~
+
+![202084111528863.png](https://img.jbzj.com/file_images/article/202008/202084111528863.png?202074111535)
+
+浅拷贝是按位拷贝对象，它会创建一个新对象，对原有对象的成员进行依次拷贝。如果属性是基本类型，拷贝的就是基本类型的值；如果属性是引用类型，拷贝的就是内存地址。因此如果新对象中的某个对象成员改变了地址，就会影响到原有的对象。
+
+~~~javascript
+//手写浅拷贝
+function shallowCopy(obj1) {
+ let obj2 = Array.isArray(obj1) ? [] : {}
+ for (let i in obj1) {
+  obj2[i] = obj1[i]
+ }
+ return obj2
+}
+var obj1 = {
+  'name' : 'zhangsan',
+  'language' : [1,[2,3],[4,5]],
+};
+var obj2 = shallowCopy(obj1);
+obj2.name = "lisi";
+obj2.language[1] = ["二","三"];
+console.log('obj1',obj1)
+console.log('obj2',obj2)
+~~~
+
+![202084111612040.png](https://img.jbzj.com/file_images/article/202008/202084111612040.png?202074111619)
+
+**2.2、浅拷贝的实现**
+
+（1）Object.assign()
+
+Object.assign()方法可以把源对象自身的任意多个的可枚举属性拷贝给目标对象，然后返回目标对象，但是Object.assign()进行的是浅拷贝，拷贝的是对象的属性的引用，而不是对象本身。此方法对于Array和Object均可适用。
+
+~~~javascript
+var obj1 = {
+  'name' : 'zhangsan',
+  'language' : [1,[2,3],[4,5]],
+};
+var obj2 = Object.assign({}, obj1);
+obj2.name = "lisi";
+obj2.language[1] = ["二","三"];
+console.log('obj1',obj1)
+console.log('obj2',obj2)
+~~~
+
+![img](https://img.jbzj.com/file_images/article/202008/202084111701179.png?20207411178)
+
+2）Array.prototype.concat()和Array.prototype.slice()
+
+Array.prototype.concat()和Array.prototype.slice()均为Array原型上的方法，只适用于Array。
+
+~~~javascript
+var arr1 = [1,3,{
+ user: 'aaa'
+}]
+var arr2 = arr1.concat();
+arr2[0] = '一';
+arr2[2].user = 'AAA';
+console.log('arr1',arr1)
+console.log('arr2',arr2)
+
+
+var arr1 = [1,3,{
+ user: 'aaa'
+}]
+var arr2 = arr1.slice();
+arr2[0] = '一';
+arr2[2].user = 'AAA';
+console.log('arr1',arr1)
+console.log('arr2',arr2)
+~~~
+
+![202084111802761.png](https://img.jbzj.com/file_images/article/202008/202084111802761.png?20207411188)
+
+补充说明：Array的slice和contact方法都不会修改原数组，而是会返回一个对原数组进行浅拷贝的新数组。这两种方法同Object.assign()一样，都是对第一层属性依次拷贝，如果第一层的属性是基本数据类型，就拷贝值；如果是引用数据类型，就拷贝内存地址。
+
+**三、JS深拷贝**
+
+对对象的属性中所有引用类型的值，遍历到是基本类型的值为止。
+
+**3.1、深拷贝实现方式**
+
+(1)JSON.parse(JSON.stringify())
+
+原理：用JSON.stringify()将对象转成字符串，再用JSON.parse()把字符串解析成对象。
+
+~~~javascript
+var obj1 = {
+  'name' : 'zhangsan',
+  'language' : [1,[2,3],[4,5]],
+};
+var obj2 = JSON.parse(JSON.stringify(obj1));
+obj2.name = "lisi";
+obj2.language[1] = ["二","三"];
+console.log('obj1',obj1)
+console.log('obj2',obj2)
+~~~
+
+![img](https://img.jbzj.com/file_images/article/202008/202084111855907.png?20207411192)
+
+缺点：这种方法可以实现数组和对象和基本数据类型的深拷贝，但不能处理函数。因为JSON.stringify()方法是将一个javascript值转换我一个JSON字符串，不能接受函数。其他影响如下：
+
+- 如果对象中有时间对象，那么用该方法拷贝之后的对象中，时间是字符串形式而不是时间对象
+- 如果对象中有RegExp、Error对象，那么序列化的结果是空
+- 如果对象中有函数或者undefined，那么序列化的结果会把函数或undefined丢失
+- 如果对象中有NAN、infinity、-infinity，那么序列化的结果会变成null
+- JSON.stringfy（）只能序列化对象的可枚举自有属性，如果对象中有是构造函数生成的，那么拷贝后会丢弃对象的constructor
+- 如果对象中存在循环引用也无法正确实现深拷贝
+
+（2）手写深拷贝函数
+
+通过递归实现深拷贝
+
+~~~javascript
+function deepCopy(obj){
+ var result= Array.isArray(obj) ? [] : {}
+ if (obj && typeof(obj) === 'object') {
+  for (let i in obj) {
+   if (obj.hasOwnProperty(i)){ // 思考：这句是否有必要？
+    if (obj[i] && typeof(obj[i]) === 'object') {
+     result[i] = deepCopy(obj[i])
+    } else {
+     result[i] = obj[i]
+    }
+   }
+  }
+ }
+ return result
+}
+var obj1 = {
+ a: 1,
+ b: {
+  c: 2
+ }
+};
+var obj2 = deepCopy(obj1);
+obj2.a = '一';
+obj2.b.c = '二'
+console.log('obj1', obj1)
+console.log('obj2', obj2)
+~~~
+
+> obj.hasOwnProperty(prop)用来判断obj这个对象中是否含有prop这个属性，返回布尔值，有则true，没有则false
+
+以上有个缺陷：当遇到两个互相引用的对象时，会出现死循环的情况，从而导致爆栈。为了避免相互引用的对象导致死循环的情况，则应该在遍历的时候判断是否互相引用。
+
+深拷贝函数改进（防止循环递归爆栈）
+
+~~~javascript
+function deepCopy(obj, parent = null) {
+ let result = Array.isArray(obj) ? [] : {}
+ let _parent = parent
+ // 该字段有父级则需要追溯该字段的父级
+ while(_parent) {
+  // 如果该字段引用了它的父级，则为循环引用
+  if (_parent.originalParent === obj) {
+   // 循环引用返回同级的新对象
+   return _parent.currentParent 
+  }
+  _parent = _parent.parent
+ }
+ if (obj && typeof(obj) === 'object') {
+  for (let i in obj) {
+   // 如果字段的值也是一个对象
+   if (obj[i] && typeof(obj[i]) === 'object') {
+    // 递归执行深拷，将同级的待拷贝对象传递给parent，方便追溯循环引用
+    result[i] = deepCopy(obj[i], {
+     originalParent: obj,
+     currentParent: result,
+     parent: parent
+    })
+   } else {
+    result[i] = obj[i]
+   }
+  }
+ }
+ return result
+}
+var obj1 = {
+ x: 1,
+ y: 2
+};
+obj1.z = obj1
+var obj2 = deepCopy(obj1)
+console.log('obj1', obj1)
+console.log('obj2', obj2)
+~~~
+
+深拷贝函数最终版（支持基本数据类型、Array、Object、原型链、RegExp、Date类型）
+
+~~~javascript
+function deepCopy(obj, parent = null) {
+ let result
+ let _parent = parent
+ while(_parent) {
+  if (_parent.originalParent === obj) {
+   return _parent.currentParent
+  }
+  _parent = _parent.parent
+ }
+ if (obj && typeof(obj) === 'object') {
+  if (obj instanceof RegExp) {
+   result = new RegExp(obj.source, obj.flags)
+  } else if (obj instanceof Date) {
+   result = new Date(obj.getTime())
+  } else {
+   if (obj instanceof Array) {
+    result = []
+   } else {
+    let proto = Object.getPrototypeOf(obj)
+    result = Object.create(proto)
+   }
+   for (let i in obj) {
+    if(obj[i] && typeof(obj[i]) === 'object') {
+     result[i] = deepCopy(obj[i], {
+      originalParent: obj,
+      currentParent: result,
+      parent: parent
+     })
+    } else {
+     result[i] = obj[i]
+    }
+   }
+  }
+ } else {
+  return obj
+ }
+ return result
+}
+var obj1 = {
+ x: 1 
+}
+
+//试调用
+function construct(){
+  this.a = 1,
+  this.b = {
+    x:2,
+    y:3,
+    z:[4,5,[6]]
+  },
+  this.c = [7,8,[9,10]],
+  this.d = new Date(),
+  this.e = /abc/ig,
+  this.f = function(a,b){
+    return a+b
+  },
+  this.g = null,
+  this.h = undefined,
+  this.i = "hello",
+  this.j = Symbol("foo")
+}
+construct.prototype.str = "I'm prototype"
+var obj1 = new construct()
+obj1.k = obj1
+obj2 = deepCopy(obj1)
+
+obj2.b.x = 999
+obj2.c[0] = 666
+
+console.log('obj1', obj1)
+console.log('obj2', obj2)
+~~~
+
+（3）函数库
+
+也可以使用一些函数库，比如函数库lodash，也有提供_.cloneDeep用来做深拷贝；
+
+~~~javascript
+var _ = require('lodash');
+var obj1 = {
+  a: 1,
+  b: { f: { g: 1 } },
+  c: [1, 2, 3]
+};
+var obj2 = _.cloneDeep(obj1);
+console.log(obj1.b.f === obj2.b.f);
+// false
+~~~
 
