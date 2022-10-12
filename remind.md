@@ -5158,7 +5158,7 @@ for (let i = 0, len = arr.length; i < len; i++) {
 - 弱引用的`只是键而不是值`，值依然是正常引用
 - 即使在外部消除了成员键的引用，内部的成员值依然存在
 
-### Proxy
+### Proxy(代理)
 
 - 定义：修改某些操作的默认行为
 - 声明：`const proxy = new Proxy(target, handler)`
@@ -5199,7 +5199,7 @@ for (let i = 0, len = arr.length; i < len; i++) {
 - 属性被定义为`不可读写/扩展/配置/枚举`时，使用拦截方法会报错
 - 代理下的目标对象，内部`this`指向`Proxy代理`
 
-### Reflect
+### Reflect(反射)
 
 - 定义：保持`Object方法`的默认行为
 - 方法
@@ -5254,7 +5254,7 @@ person.name = "Joway";
 复制代码
 ```
 
-### Class
+### Class(类)
 
 - 定义：对一类具有共同特征的事物的抽象(构造函数语法糖)
 
@@ -5408,7 +5408,7 @@ function MixClass(...mixins) {
 class Student extends MixClass(Person, Kid) {}
 ```
 
-### Module
+### Module(模块化)
 
 - 命令
 
@@ -5646,7 +5646,7 @@ import * as Person from "person";
 console.log(Person.default.AGE);
 ```
 
-### Iterator
+### Iterator(迭代器)
 
 - 定义：为各种不同的数据结构提供统一的访问机制
 - 原理：创建一个指针指向首个成员，按照次序使用`next()`指向下一个成员，直接到结束位置(数据结构只要部署`Iterator接口`就可完成遍历操作)
@@ -5824,7 +5824,7 @@ console.log(Person.default.AGE);
 - 作为参数的实例定义了`catch()`，一旦被`rejected`并不会触发`Promise.all()`的`catch()`
 - `Promise.reject()`的参数会原封不动地作为`rejected`的理由，变成后续方法的参数
 
-### Generator
+### Generator(生成器)
 
 - 定义：封装多个内部状态的异步编程解决方案
 
@@ -7004,4 +7004,725 @@ for (let [,value] of map) {
 
 ```javascript
 const { SourceMapConsumer, SourceNode } = require("source-map");
+```
+
+# 五十四、Promise的理解
+
+1、概念：**Promise** 对象用于表示一个异步操作的最终完成 (或失败)及其结果值。
+
+2、状态：大致分为三种状态。
+
+①：pending：未决定的
+
+②、resolved / fullfilled：成功
+
+③、rejected：失败
+
+状态的改变：pending -》 resolved
+
+pending -》 rejected
+
+3、解决了什么问题？
+
+①、支持链式调用，解决了回掉地狱的问题。
+
+实例对象中的一个属性 【PromiseState】。
+
+`promise.then()`，`promise.catch()`和`promise.finally()`等方法可以实现。
+
+什么是回调地狱？：回调函数嵌套调用，外部回调函数异步执行的结果是嵌套的回执行的条件。
+
+回调地狱的缺点：
+
+不便于阅读
+
+不便于异常处理
+
+解决方案：Promise链式调用
+
+例如：
+
+const myPromise =
+(new Promise(myExecutorFunc))
+.then(handleFulfilledA)
+.then(handleFulfilledB)
+.then(handleFulfilledC)
+.catch(handleRejectedAny);
+
+②、启动异步任务 =》 返回Promise对象 =》给Promise对象绑定回调函数。
+
+4、Promise 对象的值
+
+实例对象中的另一个属性值：【PromiseResult】
+
+保存着异步任务 【成功/失败】的结果
+
+以上是两个方法
+
+resolve
+
+reject
+
+5、Promise的基本流程
+
+![img](https://pic2.zhimg.com/80/v2-62e1272b4106d0f66a2f0adeae24e795_720w.webp)
+
+pending：初始状态，既没有被兑现，也没有被拒绝。
+
+fullfiled：待定状态的 Promise 对象要么会通过一个值*被兑现*
+
+*rejected：*通过某个原因（错误）*被拒绝*
+
+then：将*fullfilled或rejected的两种情况被执行调用，返回的是promise，所以会被链式的调用。*
+
+链式实现：
+
+~~~javascript
+// 在上面代码中 是实现了new出一个对象 定义了个常量来接收了 不用常量接收直接使用时
+ 
+const num = 2;
+ 
+new Promise((r,e) => {  // r(resolve)  e(reject)
+    // 异步逻辑代码
+    num === 1 ? r(num) : e(num) // 同一个逻辑中只能执行一种状态方式
+}).then(res => {
+    console.log(`num为1时被调用，num为：${res}`)
+}).catch(err => {
+    console.log(`num为2时被调用，num为：${err}`)
+})
+~~~
+
+then方法解释：
+
+~~~javascript
+// then方法是new时返回对象里的方法 也就是Promise里内置的一些方法
+// then可以有第二个回调参数 这个回调参数就是catch
+const num = 1;
+ 
+new Promise((r,e) => {
+    // 异步逻辑代码
+    num === 1 ? r(num) : e(num)
+}).then(res => {  // 为r(resolve)调用时执行的方法
+    console.log(`num为1时被调用，num为：${res}`)
+}, err => {       // 为e(reject)调用时执行的方法
+    console.log(`num为2时被调用，num为：${err}`)
+})
+ 
+// 在then方法里 会返回一个新的Promise 这就是Promise链式调用的本质 
+ 
+// 在then里如果返回的是一个普通值(数字/字符串/普通对象/undefined) 那么这个返回值就会作为这个新返回对象里的resolve调用时传参的值 此时再链式调用then方法调用的就是新Promise对象的方法
+// 如果返回的是一个Promise，当前状态就会变成返回Promise里的状态 同理返回一个对象 里面包含then方法时 也会改变状态
+~~~
+
+catch方法解释：
+
+~~~javascript
+// catch方法在new的Promise中的回调函数里调用第二个参数(reject)时，就会回调catch方法里的回调参数 (也可是then中的第二个回调参数)。
+// 在在new的Promise中的回调函数抛出异常时也会回调这个回调参数
+ 
+const num = 1;
+ 
+new Promise((resolve,reject) => {
+    if(num === 2) {
+        resolve(num);
+    }else {
+        // reject(num);  // 此时就会回调catch里的会调参数
+        throw new Error('num不为2',num); // 此时也会回调catch里的会调参数
+    } 
+}).then(res => {
+    console.log(`num等于2时:${res}`)
+}).catch(err => {
+    console.log(`num不等于2时:${err}`)
+})
+ 
+~~~
+
+finally方法解释：
+
+~~~javascript
+// finally 无论什么状态都会执行
+ 
+const num = 1;
+ 
+new Promise((resolve,reject) => {
+    num === 1 ? resolve(num) : reject(num);
+}).then(res => {
+    console.log(`num等于1时:${res}`)
+}).catch(err => {
+    console.log(`num不等于1时:${err}`)
+}).finally(() => {
+    console.log(`都会执行`)
+})
+ 
+~~~
+
+Promise类上的方法 all / allSettled
+
+~~~javascript
+// all方法可以多个Promise一起使用 统一返回所有结果
+ 
+const num = 1;
+    
+const p1 = new Promise((r,t) => {
+    num === 1 ? r(num) : t(num);
+})
+ 
+const p2 = new Promise((r,t) => {
+    num === 1 ? r(num) : t(num);
+})
+ 
+const p3 = new Promise((r,t) => {
+    num === 1 ? r(num) : t(num);
+})
+ 
+Promise.all([p1,p2,p3]).then((res) => {
+    console.log(res);  // [1,1,1] 以数组的方式返回所有结果
+})
+ 
+// 当其中一个抛出异常 或者执行t(reject)方法时会在执行处阻断Promise，下面的Promise执行就会被阻断
+// 如若不乡阻断，可以用类allSettled方法
+ 
+Promise.allSettled([p1,p2,p3]).then((res) => {
+    console.log(res);  // 以数组的方式返回所有结果
+})
+~~~
+
+# 五十五、async和await
+
+**async和await 概念**
+
+​     先从字面意思来理解。[async](https://so.csdn.net/so/search?q=async&spm=1001.2101.3001.7020) 是“异步”的简写，而 await 可以认为是 async wait 的简写。所以应该很好理解 async 用于申明一个 function 是异步的，而 await 用于等待一个异步方法执行完成。
+
+​    另外还有一个很有意思的语法规定，await 只能出现在 async 函数中。然后细心的朋友会产生一个疑问，如果 await 只能出现在 async 函数中，那这个 async 函数应该怎么调用？
+
+​     如果需要通过 await 来调用一个 async 函数，那这个调用的外面必须得再包一个 async 函数，然后……进入死循环，永无出头之日……
+
+  再来说说async有什么作用。
+
+**async的作用**
+
+​       这个问题的关键在于，async 函数是怎么处理它的返回值的！
+
+用return吗？那await做什么呢？试一下。
+
+![img](https://img-blog.csdnimg.cn/0964180cbadd431f95495ebdc8d5ce59.PNG) 
+
+看结果，我们知道返回的是一个promise对象。
+
+![img](https://img-blog.csdnimg.cn/6093d81657e1462fa634a8dc0fd95a09.PNG)
+
+​      所以我们从中知道，async 函数返回的是一个 Promise 对象。async 函数（包含函数语句、函数表达式）会返回一个 Promise 对象，如果在函数中 `return` 一个直接量，async 会把这个直接量通过 `Promise.resolve()` 封装成 Promise 对象。
+
+​      async 函数返回的是一个 Promise 对象，所以在最外层不能用 await 获取其返回值的情况下，我们当然应该用原来的方式：`then()` 链来处理这个 Promise 对象，试一下
+
+![img](https://img-blog.csdnimg.cn/6b19c418438745faa40f7c143c6cb5d4.PNG)
+
+输出结果 ⬇
+
+![img](https://img-blog.csdnimg.cn/72c42c1d90b94a5fbc8322ef8fd56b55.PNG) 
+
+ 如果async函数没有返回值会报错吗？该返回什么？
+
+ ![img](https://img-blog.csdnimg.cn/b8001c651cb64737b926b542d5c18dd1.PNG)
+
+![img](https://img-blog.csdnimg.cn/b49b09dbbb304d87b98a037e56643fbd.PNG) 
+
+  不会报错，直接返回undefined。
+
+​    在没有 `await` 的情况下执行 async 函数，它会立即执行，返回一个 Promise 对象，并且，绝不会阻塞后面的语句。这和普通返回 Promise 对象的函数并无二致。
+
+**那await是做什么用的：**
+
+​    可以认为 await 是在等待一个 async 函数完成。await 等待的是一个表达式，这个表达式的计算结果是 Promise 对象或者其它值（换句话说，就是没有特殊限定）。
+
+​    因为 async 函数返回一个 Promise 对象，所以 await 可以用于等待一个 async 函数的返回值——这也可以说是 await 在等 async 函数，但要清楚，它等的实际是一个返回值。注意到 await 不仅仅用于等 Promise 对象，它可以等任意表达式的结果，所以，await 后面实际是可以接普通函数调用或者直接量的。找一个例子试试看。
+
+ ![img](https://img-blog.csdnimg.cn/6e9c75d8adc14457b02cc69e5398692a.PNG?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5ZGG55Oc55Oc55Oc,size_17,color_FFFFFF,t_70,g_se,x_16)
+
+返回结果
+
+![img](https://img-blog.csdnimg.cn/0f94879765434f9a9210d14a5f614cae.PNG) 
+
+**await等到结果之后呢？**
+
+​     await 等到了它要等的东西，一个 Promise 对象，或者其它值，然后呢？我不得不先说，`await` 是个运算符，用于组成表达式，await 表达式的运算结果取决于它等的东西。
+
+​    如果它等到的不是一个 Promise 对象，那 await 表达式的运算结果就是它等到的东西。
+
+​    如果它等到的是一个 Promise 对象，await 就忙起来了，它会阻塞后面的代码，等着 Promise 对象 resolve，然后得到 resolve 的值，作为 await 表达式的运算结果。
+
+​    其实这就是 await 必须用在 async 函数中的原因。async 函数调用不会造成阻塞，它内部所有的阻塞都被封装在一个 Promise 对象中异步执行。
+
+**async/await帮我们做了啥？**
+
+先做个简单的比较吧 ⬇
+
+​    之前已经说明了 async 会将其后的函数的返回值封装成一个 Promise 对象，而 await 会等待这个 Promise 完成，并将其 resolve 的结果返回出来。
+
+举个例子，用 `setTimeout` 模拟耗时的异步操作，先来看看不用 async/await 会怎么写
+
+![img](https://img-blog.csdnimg.cn/2e5f1abd34114be98ebd76c9c202fdc4.PNG?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5ZGG55Oc55Oc55Oc,size_19,color_FFFFFF,t_70,g_se,x_16)
+
+ 再试试async/await
+
+![img](https://img-blog.csdnimg.cn/52dbf1ed79ba48819379787f5dbcb54a.PNG?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5ZGG55Oc55Oc55Oc,size_19,color_FFFFFF,t_70,g_se,x_16)
+
+ 
+
+​    我们看到 `takeLongTime()` 没有申明为 `async`。实际上，`takeLongTime()` 本身就是返回的 Promise 对象，加不加 `async` 结果都一样。
+
+​    又一个疑问产生了，这两段代码，两种方式对异步调用的处理（实际就是对 Promise 对象的处理）差别并不明显，甚至使用 async/await 还需要多写一些代码，那它的优势到底在哪？
+
+**async/await的优势在于处理 then：**
+
+​    单一的 Promise 链并不能发现 async/await 的优势，但是，如果需要处理由多个 Promise 组成的 then 链的时候，优势就能体现出来了（Promise 通过 then 链来解决多层回调的问题，现在又用 async/await 来进一步优化它）。
+
+​    假设一个业务，分多个步骤完成，每个步骤都是异步的，而且依赖于上一个步骤的结果。我们仍然用 `setTimeout` 来模拟异步操作：
+
+![img](https://img-blog.csdnimg.cn/390b043765724e90b6b122d8c9b71b12.PNG?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5ZGG55Oc55Oc55Oc,size_16,color_FFFFFF,t_70,g_se,x_16)
+
+ 现在用promise实现这三个步骤的处理![img](https://img-blog.csdnimg.cn/36bfbd84f6854894a2fe1de54d150e49.PNG?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5ZGG55Oc55Oc55Oc,size_17,color_FFFFFF,t_70,g_se,x_16)
+
+输出结果
+
+![img](https://img-blog.csdnimg.cn/527510e2cef84b0a806542ad182f3d30.PNG?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5ZGG55Oc55Oc55Oc,size_19,color_FFFFFF,t_70,g_se,x_16)
+
+ 结果和之前的 Promise 实现是一样的，但是这个代码看起来是不是清晰得多，几乎跟同步代码一样
+
+# 五十六、JS模块化
+
+## 1、什么是模块化
+
+在js刚刚出现的时候，是为了实现一些简单的功能，但随着浏览器的不断发展，js越来越被重视起来，可以实现较为复杂的功能。这个时候开发者为了维护方便，会把不同功能的模块抽离出来写入单独的js文件，但是当项目更为复杂的时候，html可能会引入很多个js文件，而这个时候就会出现命名冲突，污染作用域等一系列问题，这个时候模块化的概念及实现方法应运而生。
+
+模块化开发是一种管理方式，一种生产方式，一种解决问题的方案。一个模块就是实现某个特定功能的文件，我们可以很方便的使用别人的代码，想要什么模块，就引入那个模块。但是模块开发要遵循一定的规范，后面就出现了我们所熟悉的AMD和[CMD](https://so.csdn.net/so/search?q=CMD&spm=1001.2101.3001.7020)规范。
+
+**（以下只讲各模块化的基本知识与开发中的使用方法，不讲实现原理及内部处理机制。）**
+
+## 2、立即执行函数
+
+在早期，使用立即执行函数实现模块化是最常见的手段，通过函数作用域解决了命名冲突、污染全局的问题，那么立即执行函数也是一种模块化的实现方式，但并非是一种解决方案。举个例子：
+
+```javascript
+(function (a) {
+    // 在这里面声明各种变量、函数都不会污染全局作用域
+})(a)
+```
+
+## 3、AMD
+
+AMD即是“异步模块定义”，它采用异步方式加载模块，模块的加载不影响后面语句的运行，所有依赖整个模块的语句，都定义在一个回调函数中，等到加载完成后，整个回调函数才会运行。
+
+在AMD规范中，我们使用define定义模块，使用require加载模块。
+
+### **1、定义模块**
+
+```javascript
+define(id?, dependencies?, factory);
+```
+
+- id是定义的模块名，这个参数是可选的，如果没有定义该参数，模块名字应该默认为模块加载器请求的指定脚本的名字，如果有该参数，模块名必须是顶级的绝对的。
+- dependencies是定义的模块中所依赖的模块数组，依赖模块优先级执行，并且执行结果按照数组中的排序依次以参数的形式传入factory。
+- factory是模块初始化要执行的函数或对象，只被执行依次，如果是对象，则为该模块的输出值。
+
+下面来看一个例子：
+
+```javascript
+define("OrderModel", ["Header", "Pay"], function (Header, Pay) {   
+    var OrderModel = function () {
+        this.headerData = Header.getHeaderData();
+        this.payData = Pay.getPayData();
+    }
+    return OrderModel;
+})
+```
+
+### **2、加载模块**
+
+```javascript
+require([module], callback); 
+```
+
+require要传入两个参数，第一个是[module]，是一个数组，就是要加载的模块，第二个callback是加载成功之后的回调函数。
+
+下面举个例子：
+
+```javascript
+// 在定义模块中已经定义过OrderModel模块了，下面只需要加载并使用它
+require(["OrderModel"], function (OrderModel) {
+    console.log(OrderModel.headerData);    
+    console.log(OrderModel.payData);
+})
+```
+
+## 4、CMD
+
+CMD即是“通用模块定义”，CMD规范是国内发展出来的，CMD和AMD都是要解决同一个问题，只不过两者在模块定义方式和模块加载时机上有所不同罢了。
+
+### **1、定义模块**
+
+在CMD中一个模块就是一个文件，通过define()进行定义。
+
+define接收factory参数，它可以使一个函数，也可以是一个对象一个字符串。
+
+- 当factory是一个对象或者一个字符串时，表示该模块的接口就是这个对象或者字符串。
+- 当factory是一个函数时，表示是该模块的构造方法。执行该构造方法，可以得到模块向外提供的接口，factory在执行时，默认传入三个参数：require、exports、module。
+  - 其中require用来加载其它模块。exports用来实现向外提供的模块接口。
+  - module是一个对象，存储着与当前模块相关联的一些属性和方法，传给factory构造方法的exports是module.exports对象的一个引用，至通过exports参数来提供对外的接口，有时无法满足所有需求，比如当模块的接口是某个类的实例时，这个时候就需要通过module.exports来实现。
+
+下面举个例子：
+
+```javascript
+// 定义模块OrderModel.js
+define(function (require, exports, module) {
+    
+    var Header = require('./Header'); // require用来加载其它模块    
+    exports.headerData = Header.getHeaderData(); // 对外提供headerData属性    
+    // exports是module.exports的一个引用
+    console.log(exports === modele.exports); // true
+ 
+    var Pay = require('./Pay'); // 依赖可以就近加载
+    exports.payData = Pay.getPayData(); // 对外提供payData属性    
+    exports.payFun = function() {
+        console.log('payFun log something');
+    }; // 对外提供payFun方法
+ 
+})
+```
+
+### **2、加载模块**
+
+通过SeaJs的use方法我们可以加载模块
+
+举个例子：
+
+```javascript
+// 上面我们已经定义了OrderModel模块了，直接加载即可
+seajs.use(["OrderModel.js"], function (orderModel) {
+    var headerData = orderModel.headerData;
+    var payData = orderModel.payData;
+    orderModel.payFun(); // 可以直接使用，输出 payFun log something
+})
+```
+
+### **3、AMD与CMD的不同**
+
+- 对于依赖模块，AMD是提前执行，CMD是延迟执行
+- 对于依赖模块，AMD是依赖前置，CMD是依赖就近
+
+## 5、CommonJS
+
+CommonJS规范主要应用于Node，每个文件就是一个模块，有自己的作用域，即在一个文件中定义的变量、函数、类都是私有的，对其他文件不可见。
+
+### **1、定义模块**
+
+（上面说了每个文件就是一个模块，所以不存在定义的概念，只是为了承接上下文，更好理解罢了，文章后面不再说明。）
+
+CommonJs规范规定，每个模块内部有两个变量可以使用：require和module。
+
+- require用来加载某个需要的模块。
+- module代表的是当前模块，是一个对象，存储着当前模块的相关联的属性和方法。exports是module上的一个属性。该属性表示当前模块对外输出的接口，其它文件加载该模块，实际上就是读取module.exports变量。（在实际开发中如果区分不了exports和module.exports的话，那就直接使用module.exports即可，那个exports就别管、别用了。）
+
+举个例子：
+
+```javascript
+// orderModel.js
+var Header = require('./Header'); // require用来加载其它模块
+var Pay = require('./Pay');
+ 
+var payFun = function () {
+    console.log('payFun log something');
+}
+ 
+module.exports = { // 对外提供以下三个属性
+    headerData: Header.getHeaderData(),
+    payData: Pay.getPayData(),
+    payFun: payFun
+}
+```
+
+### **2、加载模块**
+
+其实在上面的代码中，即orderModel.js中已经写出了加载模块的方法了。
+
+下面是加载并使用orderModel.js的例子：
+
+```javascript
+var orderModel = require('./orderModel');
+var headerData = orderModel.headerData;
+var payData = orderModel.payData;
+orderModel.payFun(); // 输出 payFun log something
+```
+
+需要注意的是，CommonJS规范规定，模块可以多次加载，但是只会在第一次加载时运行一次，运行结果就会被缓存下来，以后再加载就直接读取缓存结果，如果想让模块再次运行，必须清除缓存。
+
+举个例子：
+
+```javascript
+require('./orderModel');
+require('./orderModel').message = 'hello world';
+require('./orderModel').message;
+// hello world
+```
+
+清除缓存例子：
+
+```javascript
+// 删除指定模块的缓存，这里删除orderModel.js，也可以写多个进行批量删除。
+delete require.cache[require.resolve('./orderModel')];
+// 删除所有模块的缓存，大范围攻击
+Object.keys(require.cache).forEach(function (key) {
+    delete require.cache[key];
+})
+```
+
+## 6、ES Module
+
+在[ES6](https://so.csdn.net/so/search?q=ES6&spm=1001.2101.3001.7020)没出来之前，模块加载方案主要使用CommonJS和AMD两种，前者用于服务器，后者用于浏览器。ES6在语言标准层面上实现了模块功能，而且使用起来相当简单。
+
+### **1、定义模块**
+
+模块功能主要由两个命令构成：export和import，export命令用于规定模块的对外接口，import用于引入其它模块提供的功能。
+
+一般来说，一个模块对应的就是一个文件，该文件内部的变量外部无法获取，如果你希望外部能够读取到某个变量，就需要使用export关键字输出该变量。
+
+举个例子：
+
+```javascript
+
+```
+
+**2、加载模块**
+
+上面已经使用export命令定义了模块对外的接口后，其它的JS文件就可以通过import命令加载这个模块。
+
+举个例子：
+
+```javascript
+// main.js
+import {name, age, getSex} from './user';
+console.log(name); // 张三
+console.log(age); // 20
+console.log(getSex(1)); // 男
+```
+
+import接受一对大括号，里面指定的是要从其它模块导入的变量名。大括号内的变量名，必须与导入模块对外接口的名称相同。
+
+我们经常需要对加载模块进行重命名，如下写法：
+
+```javascript
+// main.js
+import {name as otherName} from './user'; // 使用as进行重命名
+console.log(otherName); // 张三
+```
+
+我们也经常使用到对模块的整体加载，如下写法：
+
+```javascript
+// main.js
+import * as user from './user'; // 使用 * 号指定一个对象，所有输出值都加载在这个对象上面
+ 
+console.log(user.name); // 张三
+console.log(user.age); // 20
+console.log(user.getSex(1)); // 男
+ 
+// 需要注意的是 user是静态分析的，不允许运行时改变
+// 下面的写法是不允许的
+user.height = 180;
+user.setOld = function () {};
+```
+
+**3、和CommonJS的区别**
+
+1. ES Module不支持动态导入，但已提案，指日可待。
+2. ES Module是异步导入，因为用于浏览器，需要下载文件，如果采用同步导入对渲染有很大影响。CommonJS是同步导入，因为用于服务端，文件都在本地，同步导入即使卡主主线程影响也不大。
+3. ES Module导出的是值的引用，导入导出值都指向同一个内存地址，所以导入值会跟随导出值变化。而CommonJS在导出时都是值的拷贝，就算导出的值变了，导入的值也不会改变，所以想要更新值，必须重新导入一次。
+
+# 五十七、生成器和迭代器
+
+## 1、迭代器
+
+迭代器是一个对象，是确使用户可在容器对象（[container](https://so.csdn.net/so/search?q=container&spm=1001.2101.3001.7020)，例如链表或数组）上遍访的对象，使用该接口无需关心对象的内部实现细节。
+迭代器有next属性，其对应的方法有如下的要求：
+一个无参数或者一个参数的函数，返回一个应当拥有以下两个属性的对象：
+
+- done（boolean） ü 如果迭代器可以产生序列中的下一个值，则为 false。（这等价于没有指定 done 这个属性。）如果迭代器已将序列迭代完毕，则为 true。这种情况下，value 是可选的，如果它依然存在，即为迭代结束之后的默认返回值。
+- value
+  迭代器返回的任何 JavaScript 值。done 为 true 时可省略。
+
+```javascript
+	const friends = ['lilei', 'kobe', 'james'];
+    let index = 0
+    const friendsIterator = {
+       next: function() {
+       if (index < friends.length)
+           return { done: false, value: friends[index++] }
+       } else {
+       	   return { done: true, value: friends[index++] }
+       }
+    }
+    console.log(friendsIterator.next().value);
+    console.log(friendsIterator.next().value);
+    console.log(friendsIterator.next().value);
+```
+
+可迭代对象：
+
+当一个对象实现了iterable protocol协议时，它就是一个可迭代对象；它和迭代器是不一样的。这个对象的要求是必须实现 @@[iterator](https://so.csdn.net/so/search?q=iterator&spm=1001.2101.3001.7020) 方法，在代码中我们使用 Symbol.iterator 访问该属性；
+
+```javascript
+	// 可迭代对象
+    const iteratorObj = {
+        names: ['leilei', 'tom', 'mark'],
+        index: 0,
+        [Symbol.iterator]: function() {
+            return {
+                // 这边使用箭头函数，以使this指向iteratorObj
+                next: () => {
+                    if (this.index < this.names.length) {
+                        return { done: false, value: this.names[this.index++] }
+                    } else {
+                        return { done: true, value: 'no name' }
+                    }
+                }
+            }
+        }
+    }
+    // 获取迭代器
+    const iterator1 = iteratorObj[Symbol.iterator]()
+    console.log(iterator1.next());
+    console.log(iterator1.next());
+    console.log(iterator1.next());
+    console.log(iterator1.next());	
+```
+
+事实上我们平时创建的很多原生对象已经实现了可迭代协议，会生成一个迭代器对象的：String、Array、Map、Set、arguments对象、NodeList集合；
+
+## 2、生成器
+
+生成器是ES6中新增的一种函数控制、使用的方案，它可以让我们更加灵活的控制函数什么时候继续执行、暂停执行等。
+生成器函数也是一个函数，但是和普通的函数有一些区别：
+
+- 首先，生成器函数需要在function的后面加一个符号*：
+- 其次，生成器函数可以通过yield关键字来控制函数的执行流程：
+- 最后，生成器函数的返回值是一个Generator（生成器）：
+  生成器事实上是一种特殊的迭代器；
+  MDN的解释：Instead, they return a special type of iterator, called a Generator
+
+```javascript
+ function* getName() {
+  console.log('函数开始执行');
+      const value1 = 'tom'
+      console.log(value1)
+      yield value1
+
+      const value2 = 'mary'
+      console.log(value2);
+      yield value2
+	  console.log('函数执行结束')
+  }
+  // 返回生成器
+  const iterator = getName()
+  console.log(iterator.next()); 
+  console.log(iterator.next());
+  console.log(iterator.next());
+  console.log(iterator.next());
+  // 函数开始执行
+  // tom
+  // { value: 'tom', done: false }
+  // { value: 'mary', done: false }
+  // { value: 'tony', done: false }
+  // '函数执行结束'
+  // { value: undefined, done: true }
+```
+
+注意：直接调用生成器函数是不会执行的，它会返回生成器。yield表示每次会在这儿停止。
+其中，yield可以返回值。
+
+next(传递参数)
+
+生成器的next可以传递参数，而且这个参数会作为上一个yield语句的返回值；
+
+```javascript
+function* sum() {
+    const value1 = 10;
+     const n1 = yield value1; // 这个n1的值为5
+
+     const value2 = 20 * n1
+     /** 
+     * 注意此处的n接收的是next()传来的值，和上面的value2的值没有必然关联，当然我们也可以把第一
+     * 次的结果当作参数传入，视实际情况而定
+     */ 
+     const n2 = yield value2 // 这个n2的值为10
+
+     const value3 = 30 * n2
+     yield value3
+ }
+ const iterator = sum()
+ console.log('第一次的值：', iterator.next());
+ console.log('第二次的值：', iterator.next(5)); // 传给第一次yield的返回值
+ console.log('第三次的值：', iterator.next(10)); // 传给第二次yield的返回值
+ // 第一次的值： {value: 10, done: false}
+ // 第二次的值： {value: 100, done: false}
+ // 第三次的值： {value: 300, done: false}
+```
+
+生成器提前结束 - return函数
+
+return传值后这个生成器函数就会结束，之后调用next不会继续生成值了；
+
+```javascript
+	function* sum() {
+    	const value1 = 10;
+        const n1 = yield value1;
+
+        // 相当与在这执行了以下代码
+        // return 5
+        const value2 = 20 * n1
+        const n2 = yield value2
+
+        const value3 = 30 * n2
+        yield value3
+    }
+    const iterator = sum()
+    console.log('第一次的值：', iterator.next());
+    console.log('第二次的值：', iterator.return(5)); 
+    // 第一次的值： {value: 10, done: false}
+    // 第二次的值： {value: 5, done: true}
+```
+
+生成器抛出异常 - throw函数
+
+抛出异常后我们可以在生成器函数中捕获异常；
+但是在catch语句中不能继续yield新的值了，但是可以在catch语句外使用yield继续中断函数的执行；
+
+```javascript
+function* sum() {
+    const value1 = 10;
+    yield value1;
+    
+    try {
+        const value2 = 20
+        yield 20
+    } catch (error) {
+        console.log(error);
+        // yield '哈哈，错了'
+    }
+
+    const value3 = 30
+    yield value3
+}
+const iterator2 = sum()
+console.log('第一次的值：', iterator2.next());
+console.log('第二次的值：', iterator2.next());
+// 注意：throw紧跟着上个next()执行异常处理，所以要看好应该进行异常处理的位置
+console.log('第三次的值：', iterator2.throw('有错误')); 
+console.log('第四次的值：', iterator2.next());
+
+// 结果：
+// 第一次的值： {value: 10, done: false}
+// 第二次的值： {value: 20, done: false}
+// 有错误
+// 第三次的值： {value: 30, done: false}
+// 第四次的值： {value: undefined, done: true}
 ```
